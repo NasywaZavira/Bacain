@@ -11,12 +11,10 @@ const LogIn = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // Simpan data login
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
     localStorage.setItem("isLoggedIn", "true");
 
-    // Arahkan ke halaman berandalog
     navigate("/berandalog");
   };
 
@@ -28,7 +26,6 @@ const LogIn = () => {
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
-          {/* Email */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Email
@@ -43,7 +40,6 @@ const LogIn = () => {
             />
           </div>
 
-          {/* Username */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Username
@@ -58,7 +54,6 @@ const LogIn = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Password
@@ -73,7 +68,6 @@ const LogIn = () => {
             />
           </div>
 
-          {/* Tombol Login */}
           <button
             type="submit"
             className="w-full bg-orange-500 text-white py-3 rounded-lg text-lg font-medium shadow hover:bg-orange-600 transition"
@@ -82,7 +76,6 @@ const LogIn = () => {
           </button>
         </form>
 
-        {/* Link ke SignUp */}
         <p className="text-center text-sm mt-4 text-gray-700">
           Belum punya akun?{" "}
           <span
