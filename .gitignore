@@ -1,0 +1,17 @@
+/node_modules
+/npm-debug.log
+/yarn-error.log
+/pnpm-error.log
+/dist
+/build
+/out
+.cache
+*.log
+npm-debug.log*
+.env
+.env.local
+.env.*.local
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

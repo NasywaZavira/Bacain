@@ -1,3 +1,5 @@
+import React from "react";
+
 const Akun = () => {
   return (
     <section className="w-full flex flex-col justify-center items-start h-screen bg-gradient-to-b from-white via-white/80 to-orange-200">
