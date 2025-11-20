@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import AccountMenu from "./AccountMenu";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -115,9 +116,7 @@ const Navbar = () => {
               />
             </div>
 
-            <button className="bg-orange-500 text-white text-sm px-4 py-2 rounded-full hover:bg-orange-600 transition">
-              Akun
-            </button>
+            <AccountMenu />
           </div>
         </div>
       </nav>

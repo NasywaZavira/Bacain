@@ -9,6 +9,7 @@ import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import BerandaLog from "./pages/BerandaLog";
 import Beranda from "./pages/Beranda";
+import AdminPeminjaman from "./pages/AdminPeminjaman";
 
 const App = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/tentang" element={<Tentang />} />
+        <Route path="/admin/peminjaman" element={<AdminPeminjaman />} />
       </Routes>
     </>
   );
