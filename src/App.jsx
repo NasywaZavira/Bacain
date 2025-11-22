@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import React from "react";
+import "./index.css";
 
 import Navbar from "./components/Navbar";
 import Akun from "./pages/Akun";
@@ -14,7 +15,6 @@ import AdminPeminjaman from "./pages/AdminPeminjaman";
 const App = () => {
   const location = useLocation();
 
-  // Halaman yang tidak perlu navbar
   const hideNavbarOn = ["/login", "/signup"];
 
   return (
@@ -36,3 +36,4 @@ const App = () => {
 };
 
 export default App;
+import React from "react";
