@@ -25,6 +25,7 @@ const SignUp = () => {
         <h2 className="text-3xl font-semibold text-orange-600 text-center mb-6">
           Buat Akun Baru
         </h2>
+        
 
         <form onSubmit={handleSignup} className="space-y-5">
           <div>
