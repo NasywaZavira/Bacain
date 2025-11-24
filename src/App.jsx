@@ -11,6 +11,7 @@ import SignUp from "./pages/SignUp";
 import BerandaLog from "./pages/BerandaLog";
 import Beranda from "./pages/Beranda";
 import AdminPeminjaman from "./pages/AdminPeminjaman";
+import Profile from "./pages/Profil";
 
 const App = () => {
   const location = useLocation();
@@ -30,10 +31,10 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/tentang" element={<Tentang />} />
         <Route path="/admin/peminjaman" element={<AdminPeminjaman />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );
 };
 
 export default App;
-import React from "react";
