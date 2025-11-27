@@ -25,16 +25,16 @@ export default function AccountMenu() {
           </Link>
 
           <Link
-            to="/riwayat"
+            to="/admin/peminjaman"
             className="block px-4 py-2 hover:bg-orange-100"
           >
-            Riwayat Peminjaman
+            Daftar Peminjaman
           </Link>
 
           {/* Admin Panel ditampilkan untuk semua user */}
           <Link
-            to="/admin/peminjaman"
-            className="block px-4 py-2 hover:bg-orange-100 text-orange-600 font-semibold"
+            to="/riwayat"
+            className="block px-4 py-2 hover:bg-orange-100"
           >
             Admin Panel
           </Link>
