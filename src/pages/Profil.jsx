@@ -16,7 +16,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/profile", {
+        const res = await fetch("http://localhost:5173/api/profile", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
