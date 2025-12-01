@@ -8,6 +8,7 @@ import BerandaLog from "./pages/BerandaLog";
 import Beranda from "./pages/Beranda";
 import AdminPeminjaman from "./pages/AdminPeminjaman";
 import Akun from "./pages/Akun";
+import TestConnection from "./components/TestConnection";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
