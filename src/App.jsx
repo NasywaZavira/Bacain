@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
 // Layout with Navbar
 const Layout = () => {
   const location = useLocation();
-  const hideNavbarOn = ["/login", "/signup"];
+  const hideNavbarOn = ["/login", "/signup", "/admin/peminjaman"];
   const showNavbar = !hideNavbarOn.includes(location.pathname);
 
   return (

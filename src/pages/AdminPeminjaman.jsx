@@ -2,9 +2,24 @@ import React, { useEffect, useState } from "react";
 
 // Initial books data
 const initialBooks = [
-  { id: 1, judul: "Laskar Pelangi", penulis: "Andrea Hirata", status: "Tersedia" },
-  { id: 2, judul: "Bumi Manusia", penulis: "Pramoedya Ananta Toer", status: "Tersedia" },
-  { id: 3, judul: "Negeri 5 Menara", penulis: "Ahmad Fuadi", status: "Tersedia" },
+  {
+    id: 1,
+    judul: "Laskar Pelangi",
+    penulis: "Andrea Hirata",
+    status: "Tersedia",
+  },
+  {
+    id: 2,
+    judul: "Bumi Manusia",
+    penulis: "Pramoedya Ananta Toer",
+    status: "Tersedia",
+  },
+  {
+    id: 3,
+    judul: "Negeri 5 Menara",
+    penulis: "Ahmad Fuadi",
+    status: "Tersedia",
+  },
 ];
 
 export default function AdminPeminjaman() {
@@ -35,9 +50,10 @@ export default function AdminPeminjaman() {
 
   // Load data from localStorage on component mount
   useEffect(() => {
-    const savedPeminjaman = JSON.parse(localStorage.getItem("peminjaman")) || [];
+    const savedPeminjaman =
+      JSON.parse(localStorage.getItem("peminjaman")) || [];
     const savedBuku = JSON.parse(localStorage.getItem("buku")) || initialBooks;
-    
+
     setPeminjaman(savedPeminjaman);
     setBuku(savedBuku);
   }, []);
@@ -63,7 +79,7 @@ export default function AdminPeminjaman() {
   // Handle form submissions
   const handleSubmitPeminjaman = (e) => {
     e.preventDefault();
-    
+
     if (editIndex === null) {
       // Add new loan
       setPeminjaman([...peminjaman, { ...formPeminjaman, id: Date.now() }]);
@@ -73,15 +89,17 @@ export default function AdminPeminjaman() {
       updatedPeminjaman[editIndex] = formPeminjaman;
       setPeminjaman(updatedPeminjaman);
     }
-    
+
     // Update book status if needed
     if (formPeminjaman.status === "Dipinjam") {
-      const updatedBooks = buku.map(book => 
-        book.judul === formPeminjaman.judul ? { ...book, status: "Dipinjam" } : book
+      const updatedBooks = buku.map((book) =>
+        book.judul === formPeminjaman.judul
+          ? { ...book, status: "Dipinjam" }
+          : book
       );
       setBuku(updatedBooks);
     }
-    
+
     // Reset form
     setFormPeminjaman({
       id: Date.now(),
@@ -96,7 +114,7 @@ export default function AdminPeminjaman() {
 
   const handleSubmitBuku = (e) => {
     e.preventDefault();
-    
+
     if (editBukuIndex === null) {
       // Add new book
       setBuku([...buku, { ...formBuku, id: Date.now() }]);
@@ -106,7 +124,7 @@ export default function AdminPeminjaman() {
       updatedBuku[editBukuIndex] = formBuku;
       setBuku(updatedBuku);
     }
-    
+
     // Reset form
     setFormBuku({
       id: Date.now(),
@@ -130,7 +148,9 @@ export default function AdminPeminjaman() {
 
   // Handle delete actions
   const handleDeletePeminjaman = (index) => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus data peminjaman ini?")) {
+    if (
+      window.confirm("Apakah Anda yakin ingin menghapus data peminjaman ini?")
+    ) {
       const newData = peminjaman.filter((_, i) => i !== index);
       setPeminjaman(newData);
     }
@@ -147,33 +167,37 @@ export default function AdminPeminjaman() {
   const handleKembalikanBuku = (index) => {
     const updatedPeminjaman = [...peminjaman];
     const peminjamanDikembalikan = updatedPeminjaman[index];
-    
+
     // Update loan status
     peminjamanDikembalikan.status = "Dikembalikan";
-    
+
     // Update book status to available
-    const updatedBooks = buku.map(book => 
-      book.judul === peminjamanDikembalikan.judul ? { ...book, status: "Tersedia" } : book
+    const updatedBooks = buku.map((book) =>
+      book.judul === peminjamanDikembalikan.judul
+        ? { ...book, status: "Tersedia" }
+        : book
     );
-    
+
     setPeminjaman(updatedPeminjaman);
     setBuku(updatedBooks);
   };
 
   // Filter data based on search term
-  const filteredPeminjaman = peminjaman.filter(item => 
-    item.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.judul.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPeminjaman = peminjaman.filter(
+    (item) =>
+      item.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.judul.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredBuku = buku.filter(book => 
-    book.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.penulis.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBuku = buku.filter(
+    (book) =>
+      book.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.penulis.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <section className="w-full min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 pt-28 pb-20 px-4">
-      <div className="max-w-7xl mx-auto">
+    <section className="w-full min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200 pt-28 pb-20 px-4 flex justify-center">
+      <div className="w-full max-w-7xl border-4 border-orange-500 rounded-lg p-6 bg-white">
         <h1 className="text-3xl font-bold text-orange-600 mb-6">
           Panel Admin Perpustakaan
         </h1>
@@ -229,7 +253,7 @@ export default function AdminPeminjaman() {
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Kelola Peminjaman
             </h2>
-            
+
             {/* Add/Edit Peminjaman Form */}
             <form onSubmit={handleSubmitPeminjaman} className="mb-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -259,8 +283,8 @@ export default function AdminPeminjaman() {
                   >
                     <option value="">Pilih Buku</option>
                     {buku
-                      .filter(book => book.status === "Tersedia")
-                      .map(book => (
+                      .filter((book) => book.status === "Tersedia")
+                      .map((book) => (
                         <option key={book.id} value={book.judul}>
                           {book.judul}
                         </option>
@@ -313,7 +337,9 @@ export default function AdminPeminjaman() {
                     type="submit"
                     className="bg-orange-600 text-white py-2 px-6 rounded-lg hover:bg-orange-700 transition"
                   >
-                    {editIndex === null ? "Tambah Peminjaman" : "Simpan Perubahan"}
+                    {editIndex === null
+                      ? "Tambah Peminjaman"
+                      : "Simpan Perubahan"}
                   </button>
                   {editIndex !== null && (
                     <button
@@ -354,7 +380,10 @@ export default function AdminPeminjaman() {
                 <tbody className="divide-y divide-gray-200">
                   {filteredPeminjaman.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                      <td
+                        colSpan="6"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
                         Tidak ada data peminjaman
                       </td>
                     </tr>
@@ -415,7 +444,7 @@ export default function AdminPeminjaman() {
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Daftar Buku
             </h2>
-            
+
             {/* Add/Edit Buku Form */}
             <form onSubmit={handleSubmitBuku} className="mb-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -464,7 +493,9 @@ export default function AdminPeminjaman() {
                     type="submit"
                     className="bg-orange-600 text-white py-2 px-6 rounded-lg hover:bg-orange-700 transition"
                   >
-                    {editBukuIndex === null ? "Tambah Buku" : "Simpan Perubahan"}
+                    {editBukuIndex === null
+                      ? "Tambah Buku"
+                      : "Simpan Perubahan"}
                   </button>
                   {editBukuIndex !== null && (
                     <button
@@ -501,7 +532,10 @@ export default function AdminPeminjaman() {
                 <tbody className="divide-y divide-gray-200">
                   {filteredBuku.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
+                      <td
+                        colSpan="4"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
                         Tidak ada data buku
                       </td>
                     </tr>
@@ -549,49 +583,73 @@ export default function AdminPeminjaman() {
         {/* Dashboard Tab */}
         {activeTab === "dashboard" && (
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Dashboard
-            </h2>
-            
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="bg-blue-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-blue-800 mb-2">Total Buku</h3>
-                <p className="text-3xl font-bold text-blue-600">{buku.length}</p>
+                <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                  Total Buku
+                </h3>
+                <p className="text-3xl font-bold text-blue-600">
+                  {buku.length}
+                </p>
               </div>
               <div className="bg-yellow-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-yellow-800 mb-2">Buku Dipinjam</h3>
+                <h3 className="text-lg font-semibold text-yellow-800 mb-2">
+                  Buku Dipinjam
+                </h3>
                 <p className="text-3xl font-bold text-yellow-600">
-                  {peminjaman.filter(item => item.status === "Dipinjam").length}
+                  {
+                    peminjaman.filter((item) => item.status === "Dipinjam")
+                      .length
+                  }
                 </p>
               </div>
               <div className="bg-green-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-green-800 mb-2">Total Peminjaman</h3>
-                <p className="text-3xl font-bold text-green-600">{peminjaman.length}</p>
+                <h3 className="text-lg font-semibold text-green-800 mb-2">
+                  Total Peminjaman
+                </h3>
+                <p className="text-3xl font-bold text-green-600">
+                  {peminjaman.length}
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Peminjaman Terbaru</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Peminjaman Terbaru
+                </h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   {peminjaman.length === 0 ? (
                     <p className="text-gray-500">Belum ada data peminjaman</p>
                   ) : (
                     <ul className="space-y-2">
                       {peminjaman
-                        .sort((a, b) => new Date(b.tanggalPinjam) - new Date(a.tanggalPinjam))
+                        .sort(
+                          (a, b) =>
+                            new Date(b.tanggalPinjam) -
+                            new Date(a.tanggalPinjam)
+                        )
                         .slice(0, 5)
                         .map((item, index) => (
-                          <li key={index} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded">
+                          <li
+                            key={index}
+                            className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
+                          >
                             <div>
                               <p className="font-medium">{item.judul}</p>
-                              <p className="text-sm text-gray-600">{item.nama}</p>
+                              <p className="text-sm text-gray-600">
+                                {item.nama}
+                              </p>
                             </div>
-                            <span className={`px-2 py-1 text-xs rounded-full ${
-                              item.status === "Dipinjam" 
-                                ? "bg-yellow-100 text-yellow-800" 
-                                : "bg-green-100 text-green-800"
-                            }`}>
+                            <span
+                              className={`px-2 py-1 text-xs rounded-full ${
+                                item.status === "Dipinjam"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-green-100 text-green-800"
+                              }`}
+                            >
                               {item.status}
                             </span>
                           </li>
@@ -601,7 +659,9 @@ export default function AdminPeminjaman() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Ketersediaan Buku</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Ketersediaan Buku
+                </h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   {buku.length === 0 ? (
                     <p className="text-gray-500">Belum ada data buku</p>
@@ -611,13 +671,18 @@ export default function AdminPeminjaman() {
                         .sort((a, b) => a.status.localeCompare(b.status))
                         .slice(0, 5)
                         .map((book, index) => (
-                          <li key={index} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded">
+                          <li
+                            key={index}
+                            className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
+                          >
                             <p className="font-medium">{book.judul}</p>
-                            <span className={`px-2 py-1 text-xs rounded-full ${
-                              book.status === "Tersedia" 
-                                ? "bg-green-100 text-green-800" 
-                                : "bg-yellow-100 text-yellow-800"
-                            }`}>
+                            <span
+                              className={`px-2 py-1 text-xs rounded-full ${
+                                book.status === "Tersedia"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-yellow-100 text-yellow-800"
+                              }`}
+                            >
                               {book.status}
                             </span>
                           </li>
