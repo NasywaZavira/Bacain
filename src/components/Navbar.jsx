@@ -34,7 +34,6 @@ const Navbar = () => {
     <header className="pt-0">
       <nav className="w-full">
         <div className="w-full flex items-center justify-between py-4 px-5 bg-white shadow-sm fixed top-0 left-0 z-50">
-          
           {/* Left Side */}
           <div className="flex items-center space-x-10 ml-10">
             <div className="bg-gradient-to-r from-orange-500 to-yellow-400 text-transparent bg-clip-text font-semibold text-3xl">

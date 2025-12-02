@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // Initial books data
 const initialBooks = [
   {
-     book_id: 1,
+    book_id: 1,
     title: "Laskar Pelangi",
     author: "Andrea Hirata",
     blurb:

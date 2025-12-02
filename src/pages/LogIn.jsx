@@ -90,7 +90,7 @@ const LogIn = () => {
           <span
             className="text-orange-600 font-semibold cursor-pointer hover:underline"
             onClick={() => navigate("/signup")}
-          > 
+          >
             Daftar Sekarang
           </span>
         </p>
