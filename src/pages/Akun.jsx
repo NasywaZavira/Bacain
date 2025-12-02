@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 const Akun = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
-    name: "",
     username: "",
     email: "",
     phone: "",
-    role: "user"
+    role: "user",
   });
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,11 +21,10 @@ const Akun = () => {
     }
 
     setUserData({
-      name: user.name || "",
       username: user.username || "",
-      email: user.email || "",
-      phone: user.phone || "",
-      role: user.role || "user"
+      email: user.user_email || "",
+      phone: user.nohp || "",
+      role: "user",
     });
 
     const userLoans = JSON.parse(localStorage.getItem("userLoans") || "[]");
@@ -40,8 +38,8 @@ const Akun = () => {
     navigate("/login");
   };
 
-  const activeLoans = loans.filter(loan => loan.status === "Dipinjam");
-  const loanHistory = loans.filter(loan => loan.status === "Dikembalikan");
+  const activeLoans = loans.filter((loan) => loan.status === "Dipinjam");
+  const loanHistory = loans.filter((loan) => loan.status === "Dikembalikan");
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200">
@@ -50,15 +48,15 @@ const Akun = () => {
           <div className="space-y-8">
             {/* Profile Section */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Profil Saya</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Profil Saya
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">Informasi Akun</h3>
+                  <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                    Informasi Akun
+                  </h3>
                   <div className="space-y-4">
-                    <div>
-                      <p className="text-sm text-gray-500">Nama Lengkap</p>
-                      <p className="font-medium">{userData.name || "Belum diisi"}</p>
-                    </div>
                     <div>
                       <p className="text-sm text-gray-500">Username</p>
                       <p className="font-medium">{userData.username || "-"}</p>
@@ -74,7 +72,9 @@ const Akun = () => {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">Ubah Profil</h3>
+                  <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                    Ubah Profil
+                  </h3>
                   <button className="text-orange-600 hover:text-orange-700 font-medium">
                     Edit Profil
                   </button>
@@ -84,7 +84,9 @@ const Akun = () => {
 
             {/* Active Loans Section */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Buku yang Dipinjam</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                Buku yang Dipinjam
+              </h3>
               {loading ? (
                 <p>Memuat data peminjaman...</p>
               ) : activeLoans.length > 0 ? (
@@ -92,18 +94,32 @@ const Akun = () => {
                   <table className="min-w-full bg-white border border-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul Buku</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Pinjam</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tenggat Kembali</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Judul Buku
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Tanggal Pinjam
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Tenggat Kembali
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {activeLoans.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap">{loan.judul}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">{loan.tanggalPinjam}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">{loan.deadline}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {loan.judul}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {loan.tanggalPinjam}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {loan.deadline}
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                               {loan.status}
@@ -115,13 +131,17 @@ const Akun = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500">Tidak ada buku yang sedang dipinjam.</p>
+                <p className="text-gray-500">
+                  Tidak ada buku yang sedang dipinjam.
+                </p>
               )}
             </div>
 
             {/* Loan History Section */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Riwayat Peminjaman</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                Riwayat Peminjaman
+              </h3>
               {loading ? (
                 <p>Memuat riwayat peminjaman...</p>
               ) : loanHistory.length > 0 ? (
@@ -129,18 +149,32 @@ const Akun = () => {
                   <table className="min-w-full bg-white border border-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul Buku</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Pinjam</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Kembali</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Judul Buku
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Tanggal Pinjam
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Tanggal Kembali
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {loanHistory.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap">{loan.judul}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">{loan.tanggalPinjam}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">{loan.tanggalKembali || "-"}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {loan.judul}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {loan.tanggalPinjam}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {loan.tanggalKembali || "-"}
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                               {loan.status}

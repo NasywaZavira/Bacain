@@ -129,8 +129,6 @@ const KoleksiBuku = () => {
   return (
     <div className="min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Koleksi Buku</h1>
-
         {/* Search and Filter Section */}
         <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
           <div className="flex flex-col md:flex-row gap-4 mb-6">

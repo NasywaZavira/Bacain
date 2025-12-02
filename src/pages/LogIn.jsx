@@ -1,21 +1,44 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
+
 const LogIn = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    localStorage.setItem("email", email);
-    localStorage.setItem("username", username);
-    localStorage.setItem("isLoggedIn", "true");
+    try {
+      const res = await fetch(`${BASE}/api/auth/users`);
+      const result = await res.json();
 
-    navigate("/berandalog");
+      if (!res.ok) {
+        alert(result.message || "Gagal mengambil data pengguna");
+        return;
+      }
+
+      const users = result.data || [];
+      const foundUser = users.find(
+        (u) => u.user_email === email && u.password === password
+      );
+
+      if (!foundUser) {
+        alert("Email atau password salah");
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(foundUser));
+      localStorage.setItem("isLoggedIn", "true");
+
+      navigate("/berandalog");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Terjadi kesalahan saat login");
+    }
   };
 
   return (
@@ -36,20 +59,6 @@ const LogIn = () => {
               placeholder="Masukkan email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">
-              Username
-            </label>
-            <input
-              type="text"
-              className="w-full border border-orange-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none"
-              placeholder="Masukkan username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>

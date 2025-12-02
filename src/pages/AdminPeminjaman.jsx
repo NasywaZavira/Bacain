@@ -3,21 +3,12 @@ import React, { useEffect, useState } from "react";
 // Initial books data
 const initialBooks = [
   {
-    id: 1,
-    judul: "Laskar Pelangi",
-    penulis: "Andrea Hirata",
-    status: "Tersedia",
-  },
-  {
-    id: 2,
-    judul: "Bumi Manusia",
-    penulis: "Pramoedya Ananta Toer",
-    status: "Tersedia",
-  },
-  {
-    id: 3,
-    judul: "Negeri 5 Menara",
-    penulis: "Ahmad Fuadi",
+     book_id: 1,
+    title: "Laskar Pelangi",
+    author: "Andrea Hirata",
+    blurb:
+      "Kisah perjalanan sepuluh orang anak SD dari Belitong dalam mengenyam pendidikan.",
+    genre: "Fiksi",
     status: "Tersedia",
   },
 ];

@@ -1,22 +1,51 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
+
 const SignUp = () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    const userData = { username, email };
-    localStorage.setItem("userData", JSON.stringify(userData));
-    localStorage.setItem("username", username);
-    localStorage.setItem("isLoggedIn", "true");
+    try {
+      const res = await fetch(`${BASE}/api/auth/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          user_email: email,
+          password,
+          nohp: phone,
+        }),
+      });
 
-    navigate("/berandalog");
+      const result = await res.json();
+
+      if (!res.ok) {
+        alert(result.message || "Gagal mendaftar");
+        return;
+      }
+
+      const createdUser = result.data || null;
+      if (createdUser) {
+        localStorage.setItem("user", JSON.stringify(createdUser));
+      }
+      localStorage.setItem("isLoggedIn", "true");
+
+      navigate("/berandalog");
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Terjadi kesalahan saat mendaftar");
+    }
   };
 
   return (
@@ -39,6 +68,19 @@ const SignUp = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              Nomor HP
+            </label>
+            <input
+              type="text"
+              className="w-full border border-orange-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none"
+              placeholder="Masukkan nomor HP"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 

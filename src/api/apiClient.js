@@ -23,20 +23,20 @@ async function fetchAPI(endpoint, options = {}) {
 
 // Books API
 export async function getBooks() {
-  return fetchAPI("/api/books");
+  return fetchAPI("/api/auth/books");
 }
 
 export async function getBookById(id) {
-  return fetchAPI(`/api/books/${id}`);
+  return fetchAPI(`/api/auth/books/${id}`);
 }
 
 // Users API
 export async function getUsers() {
-  return fetchAPI("/api/users");
+  return fetchAPI("/api/auth/users");
 }
 
 export async function getUserById(id) {
-  return fetchAPI(`/api/users/${id}`);
+  return fetchAPI(`/api/auth/users/${id}`);
 }
 
 // Add more API functions as needed
