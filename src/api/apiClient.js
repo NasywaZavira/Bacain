@@ -37,6 +37,12 @@ export async function updateBooks(id, bookData) {
   });
 }
 
+export async function deleteBook(id) {
+  return fetchAPI(`/api/auth/books/${id}`, {
+    method: "DELETE",
+  });
+}
+
 // Borrowings API
 export async function createBorrowing(borrowingData) {
   return fetchAPI("/api/auth/borrowings", {
@@ -83,6 +89,7 @@ export default {
   getBooks,
   getBookById,
   updateBooks,
+  deleteBook,
 
   // Borrowings
   createBorrowing,

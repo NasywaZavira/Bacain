@@ -4,6 +4,7 @@ import {
   updateBorrowing,
   getBooks,
   updateBooks,
+  deleteBook,
 } from "../api/apiClient";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
@@ -231,10 +232,26 @@ export default function AdminPeminjaman() {
     }
   };
 
-  const handleDeleteBuku = (index) => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus buku ini?")) {
+  const handleDeleteBuku = async (index) => {
+    if (!window.confirm("Apakah Anda yakin ingin menghapus buku ini?")) {
+      return;
+    }
+
+    try {
+      const book = buku[index];
+      if (book && book.book_id) {
+        await deleteBook(book.book_id);
+      }
+
+      // Hapus dari state lokal juga
       const newData = buku.filter((_, i) => i !== index);
       setBuku(newData);
+
+      // Refresh data dari backend agar sinkron
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting book:", error);
+      alert("Gagal menghapus buku. Silakan coba lagi.");
     }
   };
 
