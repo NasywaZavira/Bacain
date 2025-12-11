@@ -1,77 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-// Sample book data - based on database schema
-const sampleBooks = [
-  {
-    book_id: 1,
-    title: "Laskar Pelangi",
-    author: "Andrea Hirata",
-    blurb:
-      "Kisah perjalanan sepuluh orang anak SD dari Belitong dalam mengenyam pendidikan.",
-    genre: "Fiksi",
-    status: "Tersedia",
-  },
-  {
-    book_id: 2,
-    title: "Bumi Manusia",
-    author: "Pramoedya Ananta Toer",
-    blurb:
-      "Novel sejarah tentang perjuangan rakyat Indonesia melawan penjajahan.",
-    genre: "Fiksi",
-    status: "Tersedia",
-  },
-  {
-    book_id: 3,
-    title: "Negeri 5 Menara",
-    author: "Ahmad Fuadi",
-    blurb:
-      "Petualangan dua remaja Muslim mencari ilmu di berbagai belahan dunia.",
-    genre: "Fiksi",
-    status: "Tersedia",
-  },
-  {
-    book_id: 4,
-    title: "Ekonomi 101",
-    author: "Tim Ahli",
-    blurb: "Pengantar lengkap tentang konsep dasar ekonomi modern.",
-    genre: "Ekonomi",
-    status: "Tersedia",
-  },
-  {
-    book_id: 5,
-    title: "Tafsir Al-Quran",
-    author: "Imam Al-Qurthubi",
-    blurb: "Penjelasan mendalam tentang makna dan hikmah ayat-ayat Al-Quran.",
-    genre: "Agama",
-    status: "Tersedia",
-  },
-  {
-    book_id: 6,
-    title: "Kamus Administrasi Publik",
-    author: "Dr. Harbani Pasolong",
-    blurb:
-      "Referensi lengkap istilah dan konsep dalam administrasi pemerintahan.",
-    genre: "Administrasi",
-    status: "Tersedia",
-  },
-  {
-    book_id: 7,
-    title: "Humor dalam Seni",
-    author: "Dr. Cornelis Lay",
-    blurb: "Analisis mendalam tentang peran humor dalam berbagai bentuk seni.",
-    genre: "Humor",
-    status: "Tersedia",
-  },
-  {
-    book_id: 8,
-    title: "Ensiklopedia Indonesia",
-    author: "Tim Penyusun",
-    blurb: "Kumpulan pengetahuan lengkap tentang Indonesia dan budayanya.",
-    genre: "Ensiklopedia",
-    status: "Tersedia",
-  },
-];
+
 
 const KoleksiBuku = () => {
   const [books, setBooks] = useState([]);
