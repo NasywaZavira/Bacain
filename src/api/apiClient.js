@@ -30,6 +30,36 @@ export async function getBookById(id) {
   return fetchAPI(`/api/auth/books/${id}`);
 }
 
+export async function updateBooks(id, bookData) {
+  return fetchAPI(`/api/auth/books/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(bookData),
+  });
+}
+
+// Borrowings API
+export async function createBorrowing(borrowingData) {
+  return fetchAPI("/api/auth/borrowings", {
+    method: "POST",
+    body: JSON.stringify(borrowingData),
+  });
+}
+
+export async function getBorrowings() {
+  return fetchAPI("/api/auth/borrowings");
+}
+
+export async function getBorrowingById(id) {
+  return fetchAPI(`/api/auth/borrowings/${id}`);
+}
+
+export async function updateBorrowing(id, borrowingData) {
+  return fetchAPI(`/api/auth/borrowings/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(borrowingData),
+  });
+}
+
 // Users API
 export async function getUsers() {
   return fetchAPI("/api/auth/users");
@@ -39,14 +69,29 @@ export async function getUserById(id) {
   return fetchAPI(`/api/auth/users/${id}`);
 }
 
+export async function updateUser(id, userData) {
+  return fetchAPI(`/api/auth/users/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(userData),
+  });
+}
+
 // Add more API functions as needed
 
 export default {
   // Books
   getBooks,
   getBookById,
+  updateBooks,
+
+  // Borrowings
+  createBorrowing,
+  getBorrowings,
+  getBorrowingById,
+  updateBorrowing,
 
   // Users
   getUsers,
   getUserById,
+  updateUser,
 };

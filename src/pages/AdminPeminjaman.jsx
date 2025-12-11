@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from "react";
+import {
+  getBorrowings,
+  updateBorrowing,
+  getBooks,
+  updateBooks,
+} from "../api/apiClient";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
 
@@ -32,7 +38,7 @@ export default function AdminPeminjaman() {
   });
 
   const [formBuku, setFormBuku] = useState({
-    id: Date.now(),
+    book_id: Date.now(),
     judul: "",
     penulis: "",
     status: "Tersedia",
@@ -46,32 +52,24 @@ export default function AdminPeminjaman() {
     const fetchData = async () => {
       try {
         const [borrowRes, booksRes] = await Promise.all([
-          fetch(`${BASE}/api/auth/borrowings`),
-          fetch(`${BASE}/api/auth/books`),
+          getBorrowings(),
+          getBooks(),
         ]);
 
-        const borrowJson = await borrowRes.json();
-        const booksJson = await booksRes.json();
-
-        if (!borrowRes.ok) {
-          throw new Error(borrowJson.message || "Gagal mengambil data peminjaman");
-        }
-
-        if (!booksRes.ok) {
-          throw new Error(booksJson.message || "Gagal mengambil data buku");
-        }
-
-        const borrowings = (borrowJson.data || []).map((b) => ({
-          id: b.borrow_id,
+        const borrowings = (borrowRes.data || []).map((b) => ({
+          borrow_id: b.borrow_id,
           nama: b.user_name || "",
           judul: b.book_title || "",
           tanggalPinjam: b.borrow_date ? b.borrow_date.slice(0, 10) : "",
           deadline: b.return_date ? b.return_date.slice(0, 10) : "",
-          status: b.status || "Dipinjam",
+          status: b.status || "Menunggu Persetujuan",
+          admin_id: b.admin_id,
+          book_id: b.book_id,
+          user_id: b.user_id,
         }));
 
-        const books = (booksJson.data || []).map((bk) => ({
-          id: bk.book_id,
+        const books = (booksRes.data || []).map((bk) => ({
+          book_id: bk.book_id,
           judul: bk.title || "",
           penulis: bk.author || "",
           status: bk.status || "Tersedia",
@@ -81,11 +79,59 @@ export default function AdminPeminjaman() {
         setBuku(books);
       } catch (error) {
         console.error("Gagal mengambil data dari backend:", error);
+        // Fallback to localStorage if API fails
+        const storedPeminjaman = JSON.parse(
+          localStorage.getItem("peminjaman") || "[]"
+        );
+        const storedBuku = JSON.parse(localStorage.getItem("buku") || "[]");
+        setPeminjaman(storedPeminjaman);
+        setBuku(storedBuku);
       }
     };
 
     fetchData();
   }, []);
+
+  // Make fetchData available for other functions
+  const fetchData = async () => {
+    try {
+      const [borrowRes, booksRes] = await Promise.all([
+        getBorrowings(),
+        getBooks(),
+      ]);
+
+      const borrowings = (borrowRes.data || []).map((b) => ({
+        borrow_id: b.borrow_id,
+        nama: b.user_name || "",
+        judul: b.book_title || "",
+        tanggalPinjam: b.borrow_date ? b.borrow_date.slice(0, 10) : "",
+        deadline: b.return_date ? b.return_date.slice(0, 10) : "",
+        status: b.status || "Menunggu Persetujuan",
+        admin_id: b.admin_id,
+        book_id: b.book_id,
+        user_id: b.user_id,
+      }));
+
+      const books = (booksRes.data || []).map((bk) => ({
+        book_id: bk.book_id,
+        judul: bk.title || "",
+        penulis: bk.author || "",
+        status: bk.status || "Tersedia",
+      }));
+
+      setPeminjaman(borrowings);
+      setBuku(books);
+    } catch (error) {
+      console.error("Gagal mengambil data dari backend:", error);
+      // Fallback to localStorage if API fails
+      const storedPeminjaman = JSON.parse(
+        localStorage.getItem("peminjaman") || "[]"
+      );
+      const storedBuku = JSON.parse(localStorage.getItem("buku") || "[]");
+      setPeminjaman(storedPeminjaman);
+      setBuku(storedBuku);
+    }
+  };
 
   // Save to localStorage when data changes
   useEffect(() => {
@@ -146,7 +192,7 @@ export default function AdminPeminjaman() {
 
     if (editBukuIndex === null) {
       // Add new book
-      setBuku([...buku, { ...formBuku, id: Date.now() }]);
+      setBuku([...buku, { ...formBuku, book_id: Date.now() }]);
     } else {
       // Update existing book
       const updatedBuku = [...buku];
@@ -156,7 +202,7 @@ export default function AdminPeminjaman() {
 
     // Reset form
     setFormBuku({
-      id: Date.now(),
+      book_id: Date.now(),
       judul: "",
       penulis: "",
       status: "Tersedia",
@@ -192,23 +238,126 @@ export default function AdminPeminjaman() {
     }
   };
 
+  // Handle approve borrowing
+  const handleApproveBorrowing = async (borrowing) => {
+    try {
+      // Get admin ID from localStorage (assuming admin is logged in)
+      const admin = JSON.parse(localStorage.getItem("admin") || "{}");
+
+      // Update borrowing with admin approval
+      const updatedBorrowing = {
+        ...borrowing,
+        admin_id: admin.admin_id || 1, // Default to admin_id 1 if not found
+        status: "Dipinjam",
+        borrow_date:
+          borrowing.borrow_date || new Date().toISOString().split("T")[0], // Ensure borrow_date is not null
+        return_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0], // 7 days from now
+      };
+
+      await updateBorrowing(borrowing.borrow_id, updatedBorrowing);
+
+      // Update book status to Dipinjam
+      const bookToUpdate = buku.find((book) => book.judul === borrowing.judul);
+      if (bookToUpdate) {
+        await updateBooks(bookToUpdate.book_id, {
+          status: "Dipinjam",
+        });
+      }
+
+      // Update user loans in localStorage
+      const userLoans = JSON.parse(localStorage.getItem("userLoans") || "[]");
+      const updatedLoans = userLoans.map((loan) =>
+        loan.judul === borrowing.judul && loan.status === "Menunggu Persetujuan"
+          ? {
+              ...loan,
+              status: "Dipinjam",
+              deadline: updatedBorrowing.return_date,
+            }
+          : loan
+      );
+      localStorage.setItem("userLoans", JSON.stringify(updatedLoans));
+
+      // Refresh data
+      fetchData();
+      alert("Peminjaman telah disetujui!");
+    } catch (error) {
+      console.error("Error approving borrowing:", error);
+      alert("Gagal menyetujui peminjaman. Silakan coba lagi.");
+    }
+  };
+
+  // Handle reject borrowing
+  const handleRejectBorrowing = async (borrowing) => {
+    if (
+      !window.confirm(
+        "Apakah Anda yakin ingin menolak pengajuan peminjaman ini?"
+      )
+    ) {
+      return;
+    }
+
+    try {
+      await updateBorrowing(borrowing.borrow_id, {
+        ...borrowing,
+        status: "Ditolak",
+      });
+
+      // Update user loans in localStorage
+      const userLoans = JSON.parse(localStorage.getItem("userLoans") || "[]");
+      const updatedLoans = userLoans.filter(
+        (loan) =>
+          !(
+            loan.judul === borrowing.judul &&
+            loan.status === "Menunggu Persetujuan"
+          )
+      );
+      localStorage.setItem("userLoans", JSON.stringify(updatedLoans));
+
+      // Refresh data
+      fetchData();
+      alert("Peminjaman telah ditolak!");
+    } catch (error) {
+      console.error("Error rejecting borrowing:", error);
+      alert("Gagal menolak peminjaman. Silakan coba lagi.");
+    }
+  };
+
   // Handle book return
-  const handleKembalikanBuku = (index) => {
-    const updatedPeminjaman = [...peminjaman];
-    const peminjamanDikembalikan = updatedPeminjaman[index];
+  const handleKembalikanBuku = async (index) => {
+    const borrowing = peminjaman[index];
 
-    // Update loan status
-    peminjamanDikembalikan.status = "Dikembalikan";
+    try {
+      // Update borrowing status only
+      await updateBorrowing(borrowing.borrow_id, {
+        status: "Dikembalikan",
+      });
 
-    // Update book status to available
-    const updatedBooks = buku.map((book) =>
-      book.judul === peminjamanDikembalikan.judul
-        ? { ...book, status: "Tersedia" }
-        : book
-    );
+      // Update book status to available
+      const bookToUpdate = buku.find((book) => book.judul === borrowing.judul);
+      if (bookToUpdate) {
+        await updateBooks(bookToUpdate.book_id, {
+          status: "Tersedia",
+        });
+      }
 
-    setPeminjaman(updatedPeminjaman);
-    setBuku(updatedBooks);
+      // Update user loans in localStorage
+      const userLoans = JSON.parse(localStorage.getItem("userLoans") || "[]");
+      const updatedLoans = userLoans.map((loan) =>
+        loan.judul === borrowing.judul && loan.status === "Dipinjam"
+          ? { ...loan, status: "Dikembalikan" }
+          : loan
+      );
+      localStorage.setItem("userLoans", JSON.stringify(updatedLoans));
+
+      // Refresh data
+      fetchData();
+      alert("Buku telah dikembalikan!");
+    } catch (error) {
+      console.error("Error returning book:", error);
+      alert("Gagal mengembalikan buku. Silakan coba lagi.");
+    }
   };
 
   // Filter data based on search term
@@ -312,11 +461,13 @@ export default function AdminPeminjaman() {
                     className="w-full p-2 border rounded-lg"
                     required
                   >
-                    <option value="">Pilih Buku</option>
+                    <option key="placeholder" value="">
+                      Pilih Buku
+                    </option>
                     {buku
                       .filter((book) => book.status === "Tersedia")
                       .map((book) => (
-                        <option key={book.id} value={book.judul}>
+                        <option key={book.book_id} value={book.judul}>
                           {book.judul}
                         </option>
                       ))}
@@ -359,8 +510,12 @@ export default function AdminPeminjaman() {
                     onChange={handlePeminjamanChange}
                     className="w-full p-2 border rounded-lg"
                   >
-                    <option value="Dipinjam">Dipinjam</option>
-                    <option value="Dikembalikan">Dikembalikan</option>
+                    <option key="dipinjam" value="Dipinjam">
+                      Dipinjam
+                    </option>
+                    <option key="dikembalikan" value="Dikembalikan">
+                      Dikembalikan
+                    </option>
                   </select>
                 </div>
                 <div className="flex items-end">
@@ -430,6 +585,10 @@ export default function AdminPeminjaman() {
                             className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               item.status === "Dipinjam"
                                 ? "bg-yellow-100 text-yellow-800"
+                                : item.status === "Menunggu Persetujuan"
+                                ? "bg-orange-100 text-orange-800"
+                                : item.status === "Ditolak"
+                                ? "bg-red-100 text-red-800"
                                 : "bg-green-100 text-green-800"
                             }`}
                           >
@@ -438,6 +597,22 @@ export default function AdminPeminjaman() {
                         </td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex justify-center space-x-2">
+                            {item.status === "Menunggu Persetujuan" && (
+                              <>
+                                <button
+                                  onClick={() => handleApproveBorrowing(item)}
+                                  className="text-green-600 hover:text-green-900"
+                                >
+                                  Setujui
+                                </button>
+                                <button
+                                  onClick={() => handleRejectBorrowing(item)}
+                                  className="text-red-600 hover:text-red-900"
+                                >
+                                  Tolak
+                                </button>
+                              </>
+                            )}
                             <button
                               onClick={() => handleEditPeminjaman(index)}
                               className="text-blue-600 hover:text-blue-900"
@@ -515,8 +690,12 @@ export default function AdminPeminjaman() {
                     onChange={handleBukuChange}
                     className="w-full p-2 border rounded-lg"
                   >
-                    <option value="Tersedia">Tersedia</option>
-                    <option value="Dipinjam">Dipinjam</option>
+                    <option key="tersedia" value="Tersedia">
+                      Tersedia
+                    </option>
+                    <option key="dipinjam" value="Dipinjam">
+                      Dipinjam
+                    </option>
                   </select>
                 </div>
                 <div className="flex items-end">
@@ -533,7 +712,7 @@ export default function AdminPeminjaman() {
                       type="button"
                       onClick={() => {
                         setFormBuku({
-                          id: Date.now(),
+                          book_id: Date.now(),
                           judul: "",
                           penulis: "",
                           status: "Tersedia",
@@ -572,7 +751,7 @@ export default function AdminPeminjaman() {
                     </tr>
                   ) : (
                     filteredBuku.map((book, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={book.book_id} className="hover:bg-gray-50">
                         <td className="px-6 py-4">{book.judul}</td>
                         <td className="px-6 py-4">{book.penulis}</td>
                         <td className="px-6 py-4">
