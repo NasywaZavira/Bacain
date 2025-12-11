@@ -410,39 +410,44 @@ export default function AdminPeminjaman() {
 
   return (
     <section className="w-full min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200 pt-28 pb-20 px-4 flex justify-center">
-      <div className="w-full max-w-7xl border-4 border-orange-500 rounded-lg p-6 bg-white">
-        <h1 className="text-3xl font-bold text-orange-600 mb-6">
-          Panel Admin Perpustakaan
-        </h1>
+      <div className="w-full max-w-7xl bg-white rounded-2xl shadow-xl border border-orange-100 px-6 py-5 md:px-8 md:py-6">
+        <div className="flex flex-col gap-2 mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Panel Admin <span className="text-orange-600">Perpustakaan</span>
+          </h1>
+          <p className="text-sm md:text-base text-gray-500">
+            Kelola peminjaman, data buku, dan ringkasan aktivitas perpustakaan.
+          </p>
+        </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b mb-6">
+        <div className="flex flex-wrap gap-2 md:gap-4 border-b border-gray-200 mb-6 md:mb-8">
           <button
             onClick={() => setActiveTab("peminjaman")}
-            className={`py-2 px-6 font-medium ${
+            className={`py-2 px-4 md:px-6 text-sm md:text-base font-medium rounded-t-md transition-colors ${
               activeTab === "peminjaman"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-500"
+                ? "border-b-2 border-orange-500 text-orange-600 bg-orange-50"
+                : "text-gray-500 hover:text-orange-500"
             }`}
           >
             Peminjaman
           </button>
           <button
             onClick={() => setActiveTab("buku")}
-            className={`py-2 px-6 font-medium ${
+            className={`py-2 px-4 md:px-6 text-sm md:text-base font-medium rounded-t-md transition-colors ${
               activeTab === "buku"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-500"
+                ? "border-b-2 border-orange-500 text-orange-600 bg-orange-50"
+                : "text-gray-500 hover:text-orange-500"
             }`}
           >
             Daftar Buku
           </button>
           <button
             onClick={() => setActiveTab("dashboard")}
-            className={`py-2 px-6 font-medium ${
+            className={`py-2 px-4 md:px-6 text-sm md:text-base font-medium rounded-t-md transition-colors ${
               activeTab === "dashboard"
-                ? "border-b-2 border-orange-500 text-orange-600"
-                : "text-gray-500"
+                ? "border-b-2 border-orange-500 text-orange-600 bg-orange-50"
+                : "text-gray-500 hover:text-orange-500"
             }`}
           >
             Dashboard
@@ -450,26 +455,26 @@ export default function AdminPeminjaman() {
         </div>
 
         {/* Search Bar */}
-        <div className="mb-6">
+        <div className="mb-6 md:mb-8">
           <input
             type="text"
             placeholder="Cari..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full p-3 md:p-3.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-sm md:text-base"
           />
         </div>
 
         {/* Peminjaman Tab */}
         {activeTab === "peminjaman" && (
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="bg-white rounded-xl border border-gray-100 shadow-md p-5 md:p-6 space-y-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Kelola Peminjaman
             </h2>
 
             {/* Add/Edit Peminjaman Form */}
-            <form onSubmit={handleSubmitPeminjaman} className="mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <form onSubmit={handleSubmitPeminjaman} className="mb-6 md:mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Nama Peminjam
@@ -479,7 +484,7 @@ export default function AdminPeminjaman() {
                     name="nama"
                     value={formPeminjaman.nama}
                     onChange={handlePeminjamanChange}
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
                   />
                 </div>
@@ -541,7 +546,7 @@ export default function AdminPeminjaman() {
                     name="status"
                     value={formPeminjaman.status}
                     onChange={handlePeminjamanChange}
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-400"
                   >
                     <option key="dipinjam" value="Dipinjam">
                       Dipinjam
@@ -551,10 +556,10 @@ export default function AdminPeminjaman() {
                     </option>
                   </select>
                 </div>
-                <div className="flex items-end">
+                <div className="flex items-end gap-3 mt-2">
                   <button
                     type="submit"
-                    className="bg-orange-600 text-white py-2 px-6 rounded-lg hover:bg-orange-700 transition"
+                    className="bg-orange-600 text-white py-2.5 px-6 rounded-lg text-sm md:text-base font-medium hover:bg-orange-700 transition-colors shadow-sm"
                   >
                     {editIndex === null
                       ? "Tambah Peminjaman"
@@ -574,7 +579,7 @@ export default function AdminPeminjaman() {
                         });
                         setEditIndex(null);
                       }}
-                      className="ml-2 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition"
+                      className="bg-gray-100 text-gray-800 py-2.5 px-4 rounded-lg text-sm md:text-base hover:bg-gray-200 transition-colors"
                     >
                       Batal
                     </button>
@@ -584,8 +589,8 @@ export default function AdminPeminjaman() {
             </form>
 
             {/* Peminjaman Table */}
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="overflow-x-auto rounded-xl border border-gray-100 bg-white">
+              <table className="min-w-full text-sm">
                 <thead className="bg-orange-500 text-white">
                   <tr>
                     <th className="px-6 py-3 text-left">Nama Peminjam</th>
@@ -596,26 +601,26 @@ export default function AdminPeminjaman() {
                     <th className="px-6 py-3 text-center">Aksi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-100 bg-white">
                   {filteredPeminjaman.length === 0 ? (
                     <tr>
                       <td
                         colSpan="6"
-                        className="px-6 py-4 text-center text-gray-500"
+                        className="px-6 py-4 text-center text-gray-500 text-sm"
                       >
                         Tidak ada data peminjaman
                       </td>
                     </tr>
                   ) : (
                     filteredPeminjaman.map((item, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={index} className="hover:bg-orange-50/40">
                         <td className="px-6 py-4">{item.nama}</td>
                         <td className="px-6 py-4">{item.judul}</td>
                         <td className="px-6 py-4">{item.tanggalPinjam}</td>
                         <td className="px-6 py-4">{item.deadline}</td>
                         <td className="px-6 py-4">
                           <span
-                            className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${
                               item.status === "Dipinjam"
                                 ? "bg-yellow-100 text-yellow-800"
                                 : item.status === "Menunggu Persetujuan"
@@ -629,18 +634,18 @@ export default function AdminPeminjaman() {
                           </span>
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <div className="flex justify-center space-x-2">
+                          <div className="flex justify-center gap-2 text-xs md:text-sm">
                             {item.status === "Menunggu Persetujuan" && (
                               <>
                                 <button
                                   onClick={() => handleApproveBorrowing(item)}
-                                  className="text-green-600 hover:text-green-900"
+                                  className="text-green-600 hover:text-green-800 font-medium"
                                 >
                                   Setujui
                                 </button>
                                 <button
                                   onClick={() => handleRejectBorrowing(item)}
-                                  className="text-red-600 hover:text-red-900"
+                                  className="text-red-600 hover:text-red-800 font-medium"
                                 >
                                   Tolak
                                 </button>
@@ -648,20 +653,20 @@ export default function AdminPeminjaman() {
                             )}
                             <button
                               onClick={() => handleEditPeminjaman(index)}
-                              className="text-blue-600 hover:text-blue-900"
+                              className="text-blue-600 hover:text-blue-800 font-medium"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => handleDeletePeminjaman(index)}
-                              className="text-red-600 hover:text-red-900 ml-2"
+                              className="text-red-600 hover:text-red-800 font-medium"
                             >
                               Hapus
                             </button>
                             {item.status === "Dipinjam" && (
                               <button
                                 onClick={() => handleKembalikanBuku(index)}
-                                className="text-green-600 hover:text-green-900 ml-2"
+                                className="text-green-600 hover:text-green-800 font-medium"
                               >
                                 Kembalikan
                               </button>
@@ -868,13 +873,12 @@ export default function AdminPeminjaman() {
                     <p className="text-gray-500">Belum ada data peminjaman</p>
                   ) : (
                     <ul className="space-y-2">
-                      {peminjaman
+                      {[...peminjaman]
                         .sort(
                           (a, b) =>
                             new Date(b.tanggalPinjam) -
                             new Date(a.tanggalPinjam)
                         )
-                        .slice(0, 5)
                         .map((item, index) => (
                           <li
                             key={index}
@@ -910,9 +914,8 @@ export default function AdminPeminjaman() {
                     <p className="text-gray-500">Belum ada data buku</p>
                   ) : (
                     <ul className="space-y-2">
-                      {buku
+                      {[...buku]
                         .sort((a, b) => a.status.localeCompare(b.status))
-                        .slice(0, 5)
                         .map((book, index) => (
                           <li
                             key={index}
