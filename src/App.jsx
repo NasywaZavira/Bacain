@@ -16,6 +16,22 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
+// Protected Route khusus Admin
+const AdminProtectedRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("isLoggedIn") === "true";
+  const role = localStorage.getItem("role");
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
 // Layout with Navbar
 const Layout = () => {
   const location = useLocation();
@@ -55,9 +71,9 @@ const App = () => {
         <Route
           path="/admin/peminjaman"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <AdminPeminjaman />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
 

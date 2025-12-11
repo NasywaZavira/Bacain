@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
+
 // Initial books data
 const initialBooks = [
   {
@@ -39,14 +41,50 @@ export default function AdminPeminjaman() {
   const [editIndex, setEditIndex] = useState(null);
   const [editBukuIndex, setEditBukuIndex] = useState(null);
 
-  // Load data from localStorage on component mount
+  // Load data from backend on component mount
   useEffect(() => {
-    const savedPeminjaman =
-      JSON.parse(localStorage.getItem("peminjaman")) || [];
-    const savedBuku = JSON.parse(localStorage.getItem("buku")) || initialBooks;
+    const fetchData = async () => {
+      try {
+        const [borrowRes, booksRes] = await Promise.all([
+          fetch(`${BASE}/api/auth/borrowings`),
+          fetch(`${BASE}/api/auth/books`),
+        ]);
 
-    setPeminjaman(savedPeminjaman);
-    setBuku(savedBuku);
+        const borrowJson = await borrowRes.json();
+        const booksJson = await booksRes.json();
+
+        if (!borrowRes.ok) {
+          throw new Error(borrowJson.message || "Gagal mengambil data peminjaman");
+        }
+
+        if (!booksRes.ok) {
+          throw new Error(booksJson.message || "Gagal mengambil data buku");
+        }
+
+        const borrowings = (borrowJson.data || []).map((b) => ({
+          id: b.borrow_id,
+          nama: b.user_name || "",
+          judul: b.book_title || "",
+          tanggalPinjam: b.borrow_date ? b.borrow_date.slice(0, 10) : "",
+          deadline: b.return_date ? b.return_date.slice(0, 10) : "",
+          status: b.status || "Dipinjam",
+        }));
+
+        const books = (booksJson.data || []).map((bk) => ({
+          id: bk.book_id,
+          judul: bk.title || "",
+          penulis: bk.author || "",
+          status: bk.status || "Tersedia",
+        }));
+
+        setPeminjaman(borrowings);
+        setBuku(books);
+      } catch (error) {
+        console.error("Gagal mengambil data dari backend:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Save to localStorage when data changes
@@ -174,17 +212,19 @@ export default function AdminPeminjaman() {
   };
 
   // Filter data based on search term
-  const filteredPeminjaman = peminjaman.filter(
-    (item) =>
-      item.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.judul.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPeminjaman = peminjaman.filter((item) => {
+    const nama = (item.nama || "").toLowerCase();
+    const judul = (item.judul || "").toLowerCase();
+    const keyword = searchTerm.toLowerCase();
+    return nama.includes(keyword) || judul.includes(keyword);
+  });
 
-  const filteredBuku = buku.filter(
-    (book) =>
-      book.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.penulis.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBuku = buku.filter((book) => {
+    const judul = (book.judul || "").toLowerCase();
+    const penulis = (book.penulis || "").toLowerCase();
+    const keyword = searchTerm.toLowerCase();
+    return judul.includes(keyword) || penulis.includes(keyword);
+  });
 
   return (
     <section className="w-full min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200 pt-28 pb-20 px-4 flex justify-center">

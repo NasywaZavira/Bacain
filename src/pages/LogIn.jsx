@@ -13,15 +13,39 @@ const LogIn = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${BASE}/api/auth/users`);
-      const result = await res.json();
+      // Cek apakah akun adalah admin
+      const adminRes = await fetch(`${BASE}/api/auth/admins`);
+      const adminResult = await adminRes.json();
 
-      if (!res.ok) {
-        alert(result.message || "Gagal mengambil data pengguna");
+      if (!adminRes.ok) {
+        alert(adminResult.message || "Gagal mengambil data admin");
         return;
       }
 
-      const users = result.data || [];
+      const admins = adminResult.data || [];
+      const foundAdmin = admins.find(
+        (a) => a.admin_email === email && a.password === password
+      );
+
+      if (foundAdmin) {
+        localStorage.setItem("user", JSON.stringify(foundAdmin));
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", "admin");
+
+        navigate("/admin/peminjaman");
+        return;
+      }
+
+      // Jika bukan admin, cek sebagai user biasa
+      const userRes = await fetch(`${BASE}/api/auth/users`);
+      const userResult = await userRes.json();
+
+      if (!userRes.ok) {
+        alert(userResult.message || "Gagal mengambil data pengguna");
+        return;
+      }
+
+      const users = userResult.data || [];
       const foundUser = users.find(
         (u) => u.user_email === email && u.password === password
       );
@@ -33,6 +57,7 @@ const LogIn = () => {
 
       localStorage.setItem("user", JSON.stringify(foundUser));
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("role", "user");
 
       navigate("/berandalog");
     } catch (error) {
