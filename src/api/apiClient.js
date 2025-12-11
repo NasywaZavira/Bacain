@@ -66,6 +66,12 @@ export async function updateBorrowing(id, borrowingData) {
   });
 }
 
+export async function deleteBorrowing(id) {
+  return fetchAPI(`/api/auth/borrowings/${id}`, {
+    method: "DELETE",
+  });
+}
+
 // Users API
 export async function getUsers() {
   return fetchAPI("/api/auth/users");
@@ -96,6 +102,7 @@ export default {
   getBorrowings,
   getBorrowingById,
   updateBorrowing,
+  deleteBorrowing,
 
   // Users
   getUsers,

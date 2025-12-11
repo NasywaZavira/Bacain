@@ -5,6 +5,7 @@ import {
   getBooks,
   updateBooks,
   deleteBook,
+  deleteBorrowing,
 } from "../api/apiClient";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
@@ -223,12 +224,27 @@ export default function AdminPeminjaman() {
   };
 
   // Handle delete actions
-  const handleDeletePeminjaman = (index) => {
+  const handleDeletePeminjaman = async (index) => {
     if (
-      window.confirm("Apakah Anda yakin ingin menghapus data peminjaman ini?")
+      !window.confirm("Apakah Anda yakin ingin menghapus data peminjaman ini?")
     ) {
+      return;
+    }
+
+    try {
+      const borrowing = peminjaman[index];
+      if (borrowing && borrowing.borrow_id) {
+        await deleteBorrowing(borrowing.borrow_id);
+      }
+
       const newData = peminjaman.filter((_, i) => i !== index);
       setPeminjaman(newData);
+
+      // Refresh data from backend to keep in sync
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting borrowing:", error);
+      alert("Gagal menghapus peminjaman. Silakan coba lagi.");
     }
   };
 
