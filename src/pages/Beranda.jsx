@@ -5,8 +5,8 @@ const Beranda = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="w-full flex flex-col justify-center items-start h-screen bg-gradient-to-b from-white via-white/80 to-orange-200">
-      <div className="max-w-xl space-y-4 ml-40 ">
+    <section className="w-full flex flex-col justify-center items-start h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
+      <div className="max-w-xl space-y-4 ml-[10vw] ">
         <h1 className="text-6xl font-medium leading-tight">
           Hello,
           <br />

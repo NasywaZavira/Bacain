@@ -41,7 +41,7 @@ const Layout = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {showNavbar && <Navbar />}
-      <main className={showNavbar ? "pt-20 pb-10" : ""}>
+      <main className={showNavbar ? "pt-20" : ""}>
         <Outlet />
       </main>
     </div>
