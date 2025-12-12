@@ -86,10 +86,10 @@ const KoleksiBuku = () => {
       const borrowingData = {
         book_id: bookId,
         user_id: user.user_id,
-        admin_id: null, // Will be set by admin when approving
+        admin_id: null,
         borrow_date: new Date().toISOString().split("T")[0],
-        return_date: null, // Will be set by admin when approving
-        status: "Menunggu Persetujuan", // Now valid with updated constraint
+        return_date: null,
+        status: "Menunggu Persetujuan",
       };
 
       const result = await createBorrowing(borrowingData);
@@ -103,7 +103,7 @@ const KoleksiBuku = () => {
       setBooks(updatedBooks);
       setFilteredBooks(updatedBooks);
 
-      // Save to localStorage for user account view
+      // Save to localStorage
       const currentLoans = JSON.parse(
         localStorage.getItem("userLoans") || "[]"
       );
@@ -112,7 +112,7 @@ const KoleksiBuku = () => {
         tanggalPinjam: borrowingData.borrow_date,
         deadline: null,
         status: "Menunggu Persetujuan",
-        borrow_id: Date.now(), // Temporary ID
+        borrow_id: Date.now(),
       };
       localStorage.setItem(
         "userLoans",
@@ -120,11 +120,13 @@ const KoleksiBuku = () => {
       );
 
       toast.dismiss(loadingId);
-      toast.success(`Permintaan pinjam "${bookToBorrow.title}" berhasil dikirim!`, {
-        duration: 4000,
-        icon: '📚',
-      });
-
+      toast.success(
+        `Permintaan pinjam "${bookToBorrow.title}" berhasil dikirim!`,
+        {
+          duration: 4000,
+          icon: "📚",
+        }
+      );
     } catch (error) {
       console.error("Error creating borrowing:", error);
       toast.dismiss(loadingId);
@@ -135,10 +137,10 @@ const KoleksiBuku = () => {
   return (
     <div className="min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Loading State */}
+        {/* Loading State dengan animasi Pulse bawaan Tailwind */}
         {loading && (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <p className="text-gray-500">Memuat data buku...</p>
+          <div className="text-center py-12 bg-white rounded-lg shadow animate-pulse">
+            <p className="text-gray-500 font-medium">Sedang memuat data...</p>
           </div>
         )}
 
@@ -148,7 +150,7 @@ const KoleksiBuku = () => {
             <p className="text-red-500 mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
             >
               Coba Lagi
             </button>
@@ -159,7 +161,7 @@ const KoleksiBuku = () => {
         {!loading && !error && (
           <>
             {/* Search and Filter Section */}
-            <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
+            <div className="mb-8 bg-white p-6 rounded-lg shadow-md transition-shadow hover:shadow-lg duration-300">
               <div className="flex flex-col md:flex-row gap-4 mb-6">
                 <div className="flex-1">
                   <label
@@ -172,7 +174,7 @@ const KoleksiBuku = () => {
                     type="text"
                     id="search"
                     placeholder="Cari judul atau penulis..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -187,7 +189,7 @@ const KoleksiBuku = () => {
                   </label>
                   <select
                     id="genre"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none cursor-pointer"
                     value={selectedGenre}
                     onChange={(e) => setSelectedGenre(e.target.value)}
                   >
@@ -211,55 +213,58 @@ const KoleksiBuku = () => {
                 {filteredBooks.map((book) => (
                   <div
                     key={book.book_id}
-                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 p-6 h-full"
+                    // FITUR UPDATE: Hover Effect (Melayang & Bayangan) menggunakan Tailwind
+                    className="bg-white rounded-xl shadow-md overflow-hidden p-6 h-full flex flex-col border border-transparent 
+                               hover:border-orange-200 hover:-translate-y-2 hover:shadow-2xl 
+                               transition-all duration-300 ease-in-out group"
                   >
-                    <div className="flex flex-col h-full">
-                      <div className="grow">
-                        <h3
-                          className="font-semibold text-lg mb-2"
-                          title={book.title}
-                        >
-                          {book.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm mb-3">
-                          Oleh: {book.author}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          <span className="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
-                            {book.genre}
-                          </span>
-                          <span
-                            className={`px-3 py-1 text-xs font-medium rounded-full ${
-                              book.status === "Tersedia"
-                                ? "bg-green-100 text-green-800"
-                                : book.status === "Menunggu Persetujuan"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {book.status}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600 line-clamp-3">
-                          {book.blurb}
-                        </p>
-                      </div>
-                      <button
-                        className={`w-full py-2 rounded-md transition-colors mt-4 ${
-                          book.status === "Tersedia"
-                            ? "bg-orange-500 text-white hover:bg-orange-600"
-                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        }`}
-                        onClick={() => handleBorrow(book.book_id)}
-                        disabled={book.status !== "Tersedia"}
+                    <div className="grow">
+                      <h3
+                        className="font-semibold text-lg mb-2 text-gray-800 group-hover:text-orange-600 transition-colors"
+                        title={book.title}
                       >
-                        {book.status === "Tersedia"
-                          ? "Pinjam Buku"
-                          : book.status === "Menunggu Persetujuan"
-                          ? "Menunggu Persetujuan"
-                          : "Tidak Tersedia"}
-                      </button>
+                        {book.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-3">
+                        Oleh: {book.author}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
+                          {book.genre}
+                        </span>
+                        <span
+                          className={`px-3 py-1 text-xs font-medium rounded-full ${
+                            book.status === "Tersedia"
+                              ? "bg-green-100 text-green-800"
+                              : book.status === "Menunggu Persetujuan"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {book.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-3">
+                        {book.blurb}
+                      </p>
                     </div>
+                    
+                    {/* FITUR UPDATE: Tombol dengan efek tekan (Active Scale) */}
+                    <button
+                      className={`w-full py-2 rounded-lg transition-all duration-200 mt-4 font-medium active:scale-95 ${
+                        book.status === "Tersedia"
+                          ? "bg-orange-500 text-white hover:bg-orange-600 shadow-md hover:shadow-lg"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      }`}
+                      onClick={() => handleBorrow(book.book_id)}
+                      disabled={book.status !== "Tersedia"}
+                    >
+                      {book.status === "Tersedia"
+                        ? "Pinjam Buku"
+                        : book.status === "Menunggu Persetujuan"
+                        ? "Menunggu Persetujuan"
+                        : "Tidak Tersedia"}
+                    </button>
                   </div>
                 ))}
               </div>
@@ -271,7 +276,7 @@ const KoleksiBuku = () => {
                     setSearchQuery("");
                     setSelectedGenre("Semua");
                   }}
-                  className="mt-4 text-orange-600 hover:text-orange-800"
+                  className="mt-4 text-orange-600 hover:text-orange-800 hover:underline"
                 >
                   Reset filter
                 </button>
@@ -280,7 +285,7 @@ const KoleksiBuku = () => {
           </>
         )}
       </div>
-      {/* ✅ Footer */}
+      {/* Footer */}
       <footer className="w-full text-center py-4 text-gray-700 mt-6">
         <p className="text-sm">
           © {new Date().getFullYear()} Perpustakaan Bacain — All Rights
