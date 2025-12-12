@@ -65,7 +65,6 @@ const BerandaLog = () => {
         localStorage.setItem("user", JSON.stringify(currentUser));
       } else {
         console.error("User not found in database");
-        // User not found, redirect to login
         localStorage.removeItem("user");
         localStorage.removeItem("isLoggedIn");
         navigate("/login");
@@ -76,39 +75,49 @@ const BerandaLog = () => {
   };
 
   return (
-    <section className="w-full flex flex-col justify-center items-start h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
-      <div className="max-w-xl space-y-4 ml-[10vw]">
-        <h1 className="text-6xl font-medium leading-tight">
-          Hello,{" "}
-          {userData.username ? (
-            <span className="text-orange-500 font-medium">
-              {userData.username}
-            </span>
-          ) : (
-            ""
+    <div className="flex flex-col min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
+      {/* Content */}
+      <section className="flex-1 w-full flex flex-col justify-center items-start">
+        <div className="max-w-xl space-y-4 ml-[10vw]">
+          <h1 className="text-6xl font-medium leading-tight">
+            Hello,{" "}
+            {userData.username ? (
+              <span className="text-orange-500 font-medium">
+                {userData.username}
+              </span>
+            ) : (
+              ""
+            )}
+            <br />
+            Selamat Datang
+          </h1>
+
+          <p className="text-xl ml-1">
+            di{" "}
+            <span className="text-orange-500 font-semibold">
+              Perpustakaan Bacain!!
+            </span>{" "}
+            Cari dan Jelajahi Buku terbaikmu disini.
+          </p>
+
+          {!isLoggedIn && (
+            <button
+              onClick={() => navigate("/login")}
+              className="px-6 py-3 bg-orange-400 text-white rounded-xl shadow hover:bg-orange-600 transition"
+            >
+              Login Sekarang
+            </button>
           )}
-          <br />
-          Selamat Datang
-        </h1>
+        </div>
+      </section>
 
-        <p className="text-xl ml-1">
-          di{" "}
-          <span className="text-orange-500 font-semibold">
-            Perpustakaan Bacain!!
-          </span>{" "}
-          Cari dan Jelajahi Buku terbaikmu disini.
+      {/* Footer Sticky */}
+      <footer className="w-full text-center py-4 text-gray-700 sticky bottom-0">
+        <p className="text-sm text-gray-700">
+          © {new Date().getFullYear()} Perpustakaan Bacain — All Rights Reserved
         </p>
-
-        {!isLoggedIn && (
-          <button
-            onClick={() => navigate("/login")}
-            className="px-6 py-3 bg-orange-400 text-white rounded-xl shadow hover:bg-orange-600 transition"
-          >
-            Login Sekarang
-          </button>
-        )}
-      </div>
-    </section>
+      </footer>
+    </div>
   );
 };
 
