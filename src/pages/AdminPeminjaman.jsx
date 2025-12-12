@@ -7,6 +7,7 @@ import {
   deleteBook,
   deleteBorrowing,
 } from "../api/apiClient";
+import toast from "react-hot-toast";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
 
@@ -52,47 +53,6 @@ export default function AdminPeminjaman() {
 
   // Load data from backend on component mount
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [borrowRes, booksRes] = await Promise.all([
-          getBorrowings(),
-          getBooks(),
-        ]);
-
-        const borrowings = (borrowRes.data || []).map((b) => ({
-          borrow_id: b.borrow_id,
-          nama: b.user_name || "",
-          judul: b.book_title || "",
-          tanggalPinjam: b.borrow_date ? b.borrow_date.slice(0, 10) : "",
-          deadline: b.return_date ? b.return_date.slice(0, 10) : "",
-          status: b.status || "Menunggu Persetujuan",
-          admin_id: b.admin_id,
-          book_id: b.book_id,
-          user_id: b.user_id,
-        }));
-
-        const books = (booksRes.data || []).map((bk) => ({
-          book_id: bk.book_id,
-          judul: bk.title || "",
-          penulis: bk.author || "",
-          genre: bk.genre || "",
-          status: bk.status || "Tersedia",
-        }));
-
-        setPeminjaman(borrowings);
-        setBuku(books);
-      } catch (error) {
-        console.error("Gagal mengambil data dari backend:", error);
-        // Fallback to localStorage if API fails
-        const storedPeminjaman = JSON.parse(
-          localStorage.getItem("peminjaman") || "[]"
-        );
-        const storedBuku = JSON.parse(localStorage.getItem("buku") || "[]");
-        setPeminjaman(storedPeminjaman);
-        setBuku(storedBuku);
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -163,11 +123,13 @@ export default function AdminPeminjaman() {
     if (editIndex === null) {
       // Add new loan
       setPeminjaman([...peminjaman, { ...formPeminjaman, id: Date.now() }]);
+      toast.success("Data peminjaman berhasil ditambahkan");
     } else {
       // Update existing loan
       const updatedPeminjaman = [...peminjaman];
       updatedPeminjaman[editIndex] = formPeminjaman;
       setPeminjaman(updatedPeminjaman);
+      toast.success("Data peminjaman berhasil diperbarui");
     }
 
     // Update book status if needed
@@ -198,11 +160,13 @@ export default function AdminPeminjaman() {
     if (editBukuIndex === null) {
       // Add new book
       setBuku([...buku, { ...formBuku, book_id: Date.now() }]);
+      toast.success("Buku berhasil ditambahkan ke koleksi");
     } else {
       // Update existing book
       const updatedBuku = [...buku];
       updatedBuku[editBukuIndex] = formBuku;
       setBuku(updatedBuku);
+      toast.success("Data buku berhasil diperbarui");
     }
 
     // Reset form
@@ -220,11 +184,13 @@ export default function AdminPeminjaman() {
   const handleEditPeminjaman = (index) => {
     setFormPeminjaman(peminjaman[index]);
     setEditIndex(index);
+    toast("Mode edit aktif", { icon: "✏️" });
   };
 
   const handleEditBuku = (index) => {
     setFormBuku(buku[index]);
     setEditBukuIndex(index);
+    toast("Mode edit buku aktif", { icon: "✏️" });
   };
 
   // Handle delete actions
@@ -234,6 +200,8 @@ export default function AdminPeminjaman() {
     ) {
       return;
     }
+
+    const loadingId = toast.loading("Menghapus data...");
 
     try {
       const borrowing = peminjaman[index];
@@ -246,9 +214,12 @@ export default function AdminPeminjaman() {
 
       // Refresh data from backend to keep in sync
       fetchData();
+      toast.dismiss(loadingId);
+      toast.success("Data peminjaman dihapus");
     } catch (error) {
       console.error("Error deleting borrowing:", error);
-      alert("Gagal menghapus peminjaman. Silakan coba lagi.");
+      toast.dismiss(loadingId);
+      toast.error("Gagal menghapus peminjaman.");
     }
   };
 
@@ -256,6 +227,8 @@ export default function AdminPeminjaman() {
     if (!window.confirm("Apakah Anda yakin ingin menghapus buku ini?")) {
       return;
     }
+
+    const loadingId = toast.loading("Menghapus buku...");
 
     try {
       const book = buku[index];
@@ -269,14 +242,19 @@ export default function AdminPeminjaman() {
 
       // Refresh data dari backend agar sinkron
       fetchData();
+      toast.dismiss(loadingId);
+      toast.success("Buku berhasil dihapus dari koleksi");
     } catch (error) {
       console.error("Error deleting book:", error);
-      alert("Gagal menghapus buku. Silakan coba lagi.");
+      toast.dismiss(loadingId);
+      toast.error("Gagal menghapus buku.");
     }
   };
 
   // Handle approve borrowing
   const handleApproveBorrowing = async (borrowing) => {
+    const loadingId = toast.loading("Memproses persetujuan...");
+
     try {
       // Get admin ID from localStorage (assuming admin is logged in)
       const admin = JSON.parse(localStorage.getItem("admin") || "{}");
@@ -318,10 +296,12 @@ export default function AdminPeminjaman() {
 
       // Refresh data
       fetchData();
-      alert("Peminjaman telah disetujui!");
+      toast.dismiss(loadingId);
+      toast.success("Peminjaman disetujui!");
     } catch (error) {
       console.error("Error approving borrowing:", error);
-      alert("Gagal menyetujui peminjaman. Silakan coba lagi.");
+      toast.dismiss(loadingId);
+      toast.error("Gagal menyetujui peminjaman.");
     }
   };
 
@@ -334,6 +314,8 @@ export default function AdminPeminjaman() {
     ) {
       return;
     }
+
+    const loadingId = toast.loading("Menolak peminjaman...");
 
     try {
       await updateBorrowing(borrowing.borrow_id, {
@@ -354,16 +336,19 @@ export default function AdminPeminjaman() {
 
       // Refresh data
       fetchData();
-      alert("Peminjaman telah ditolak!");
+      toast.dismiss(loadingId);
+      toast.success("Peminjaman ditolak.");
     } catch (error) {
       console.error("Error rejecting borrowing:", error);
-      alert("Gagal menolak peminjaman. Silakan coba lagi.");
+      toast.dismiss(loadingId);
+      toast.error("Gagal menolak peminjaman.");
     }
   };
 
   // Handle book return
   const handleKembalikanBuku = async (index) => {
     const borrowing = peminjaman[index];
+    const loadingId = toast.loading("Memproses pengembalian...");
 
     try {
       // Update borrowing status only
@@ -390,10 +375,12 @@ export default function AdminPeminjaman() {
 
       // Refresh data
       fetchData();
-      alert("Buku telah dikembalikan!");
+      toast.dismiss(loadingId);
+      toast.success("Buku berhasil dikembalikan");
     } catch (error) {
       console.error("Error returning book:", error);
-      alert("Gagal mengembalikan buku. Silakan coba lagi.");
+      toast.dismiss(loadingId);
+      toast.error("Gagal mengembalikan buku.");
     }
   };
 
@@ -588,6 +575,7 @@ export default function AdminPeminjaman() {
                           status: "Dipinjam",
                         });
                         setEditIndex(null);
+                        toast("Edit dibatalkan", { icon: "❌" });
                       }}
                       className="bg-gray-100 text-gray-800 py-2.5 px-4 rounded-lg text-sm md:text-base hover:bg-gray-200 transition-colors"
                     >
@@ -779,6 +767,7 @@ export default function AdminPeminjaman() {
                           status: "Tersedia",
                         });
                         setEditBukuIndex(null);
+                        toast("Edit dibatalkan", { icon: "❌" });
                       }}
                       className="bg-gray-100 text-gray-800 py-2.5 px-4 rounded-lg text-sm md:text-base hover:bg-gray-200 transition-colors"
                     >

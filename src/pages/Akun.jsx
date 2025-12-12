@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBorrowings, updateUser } from "../api/apiClient";
+import toast from "react-hot-toast";
 
 const Akun = () => {
   const navigate = useNavigate();
@@ -89,6 +90,8 @@ const Akun = () => {
   const handleSaveProfile = async () => {
     if (!userId) return;
     setSaving(true);
+    const loadingId = toast.loading("Menyimpan perubahan...");
+
     try {
       const payload = {
         username: formProfile.username,
@@ -114,9 +117,12 @@ const Akun = () => {
       });
 
       setIsEditing(false);
+      toast.dismiss(loadingId);
+      toast.success("Profil berhasil diperbarui!");
     } catch (error) {
       console.error("Gagal mengupdate profil:", error);
-      alert("Gagal mengupdate profil. Silakan coba lagi.");
+      toast.dismiss(loadingId);
+      toast.error("Gagal mengupdate profil. Silakan coba lagi.");
     } finally {
       setSaving(false);
     }
@@ -125,6 +131,7 @@ const Akun = () => {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
+    toast.success("Berhasil logout!");
     navigate("/login");
   };
 

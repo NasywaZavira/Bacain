@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
 
@@ -13,6 +14,8 @@ const SignUp = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    const loadingId = toast.loading("Mendaftarkan akun...");
 
     try {
       const res = await fetch(`${BASE}/api/auth/users`, {
@@ -31,7 +34,8 @@ const SignUp = () => {
       const result = await res.json();
 
       if (!res.ok) {
-        alert(result.message || "Gagal mendaftar");
+        toast.dismiss(loadingId);
+        toast.error(result.message || "Gagal mendaftar, silakan cek data Anda.");
         return;
       }
 
@@ -40,11 +44,15 @@ const SignUp = () => {
         localStorage.setItem("user", JSON.stringify(createdUser));
       }
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("role", "user");
 
+      toast.dismiss(loadingId);
+      toast.success("Pendaftaran Berhasil! Selamat datang.");
       navigate("/berandalog");
     } catch (error) {
       console.error("Signup error:", error);
-      alert("Terjadi kesalahan saat mendaftar");
+      toast.dismiss(loadingId);
+      toast.error("Terjadi kesalahan koneksi saat mendaftar.");
     }
   };
 
