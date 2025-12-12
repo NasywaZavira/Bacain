@@ -280,6 +280,13 @@ const KoleksiBuku = () => {
           </>
         )}
       </div>
+      {/* ✅ Footer */}
+      <footer className="w-full text-center py-4 text-gray-700 mt-6">
+        <p className="text-sm">
+          © {new Date().getFullYear()} Perpustakaan Bacain — All Rights
+          Reserved
+        </p>
+      </footer>
     </div>
   );
 };

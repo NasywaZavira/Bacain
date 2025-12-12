@@ -74,6 +74,11 @@ const Tentang = () => {
           </div>
         </div>
       </div>
+      <footer className="mt-20 py-6 text-center text-gray-700">
+        <p className="text-sm">
+          © {new Date().getFullYear()} Perpustakaan Bacain — All Rights Reserved
+        </p>
+      </footer>
     </section>
   );
 };

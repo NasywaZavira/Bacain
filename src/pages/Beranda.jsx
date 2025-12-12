@@ -28,6 +28,12 @@ const Beranda = () => {
           Login Sekarang
         </button>
       </div>
+      {/* Footer */}
+      <footer className="w-full text-center py-4 text-gray-700 sticky bottom-0">
+        <p className="text-sm">
+          © {new Date().getFullYear()} Perpustakaan Bacain — All Rights Reserved
+        </p>
+      </footer>
     </section>
   );
 };
