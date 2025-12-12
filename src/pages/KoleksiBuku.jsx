@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getBooks, createBorrowing } from "../api/apiClient";
+import toast from "react-hot-toast";
 
 const KoleksiBuku = () => {
   const [books, setBooks] = useState([]);
@@ -29,6 +30,7 @@ const KoleksiBuku = () => {
       } catch (err) {
         setError("Gagal memuat data buku. Silakan coba lagi.");
         console.error("Error fetching books:", err);
+        toast.error("Gagal memuat data buku.");
       } finally {
         setLoading(false);
       }
@@ -62,20 +64,23 @@ const KoleksiBuku = () => {
   const handleBorrow = async (bookId) => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (!user || !localStorage.getItem("isLoggedIn")) {
-      alert("Silakan login terlebih dahulu untuk meminjam buku");
+      toast.error("Silakan login terlebih dahulu untuk meminjam buku");
       return;
     }
 
     const bookToBorrow = books.find((book) => book.book_id === bookId);
     if (!bookToBorrow) {
-      alert("Buku tidak ditemukan");
+      toast.error("Buku tidak ditemukan");
       return;
     }
 
     if (bookToBorrow.status !== "Tersedia") {
-      alert("Buku tidak tersedia untuk dipinjam");
+      toast.error("Buku tidak tersedia untuk dipinjam saat ini");
       return;
     }
+
+    // Tampilkan loading saat proses peminjaman
+    const loadingId = toast.loading("Memproses peminjaman...");
 
     try {
       const borrowingData = {
@@ -114,12 +119,16 @@ const KoleksiBuku = () => {
         JSON.stringify([...currentLoans, newLoan])
       );
 
-      alert(
-        `Permintaan peminjaman buku "${bookToBorrow.title}" telah dikirim. Menunggu persetujuan admin.`
-      );
+      toast.dismiss(loadingId);
+      toast.success(`Permintaan pinjam "${bookToBorrow.title}" berhasil dikirim!`, {
+        duration: 4000,
+        icon: '📚',
+      });
+
     } catch (error) {
       console.error("Error creating borrowing:", error);
-      alert("Gagal mengajukan peminjaman. Silakan coba lagi.");
+      toast.dismiss(loadingId);
+      toast.error("Gagal mengajukan peminjaman. Silakan coba lagi.");
     }
   };
 

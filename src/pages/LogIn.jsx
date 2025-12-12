@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
 
@@ -12,13 +13,17 @@ const LogIn = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // Tampilkan loading toast
+    const loadingToast = toast.loading("Sedang memproses login...");
+
     try {
       // Cek apakah akun adalah admin
       const adminRes = await fetch(`${BASE}/api/auth/admins`);
       const adminResult = await adminRes.json();
 
       if (!adminRes.ok) {
-        alert(adminResult.message || "Gagal mengambil data admin");
+        toast.dismiss(loadingToast);
+        toast.error(adminResult.message || "Gagal mengambil data admin");
         return;
       }
 
@@ -32,6 +37,8 @@ const LogIn = () => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", "admin");
 
+        toast.dismiss(loadingToast);
+        toast.success("Login Berhasil! Selamat datang Admin.");
         navigate("/admin/peminjaman");
         return;
       }
@@ -41,7 +48,8 @@ const LogIn = () => {
       const userResult = await userRes.json();
 
       if (!userRes.ok) {
-        alert(userResult.message || "Gagal mengambil data pengguna");
+        toast.dismiss(loadingToast);
+        toast.error(userResult.message || "Gagal mengambil data pengguna");
         return;
       }
 
@@ -51,7 +59,8 @@ const LogIn = () => {
       );
 
       if (!foundUser) {
-        alert("Email atau password salah");
+        toast.dismiss(loadingToast);
+        toast.error("Email atau password salah");
         return;
       }
 
@@ -59,10 +68,13 @@ const LogIn = () => {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("role", "user");
 
+      toast.dismiss(loadingToast);
+      toast.success("Login Berhasil! Selamat membaca.");
       navigate("/berandalog");
     } catch (error) {
       console.error("Login error:", error);
-      alert("Terjadi kesalahan saat login");
+      toast.dismiss(loadingToast);
+      toast.error("Terjadi kesalahan koneksi saat login");
     }
   };
 

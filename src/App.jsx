@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation, Navigate, Outlet } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
 import KoleksiBuku from "./pages/KoleksiBuku";
 import Tentang from "./pages/Tentang";
@@ -40,6 +41,31 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Konfigurasi Toast Notification */}
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+          success: {
+            style: {
+              background: "#10B981",
+              color: "white",
+            },
+          },
+          error: {
+            style: {
+              background: "#EF4444",
+              color: "white",
+            },
+          },
+        }}
+      />
+
       {showNavbar && <Navbar />}
       <main className={showNavbar ? "pt-20" : ""}>
         <Outlet />
