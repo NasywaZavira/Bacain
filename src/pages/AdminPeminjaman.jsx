@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   getBorrowings,
   updateBorrowing,
@@ -25,7 +27,9 @@ const initialBooks = [
 ];
 
 export default function AdminPeminjaman() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("peminjaman");
+
   const [peminjaman, setPeminjaman] = useState([]);
   const [buku, setBuku] = useState(initialBooks);
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,10 +44,17 @@ export default function AdminPeminjaman() {
     status: "Dipinjam",
   });
 
+  const handleLogout = () => {
+    localStorage.removeItem("admin");
+    localStorage.removeItem("isAdminLoggedIn");
+    navigate("/");
+  };
+
   const [formBuku, setFormBuku] = useState({
     book_id: Date.now(),
     judul: "",
     penulis: "",
+    blurb: "",
     genre: "",
     status: "Tersedia",
   });
@@ -80,6 +91,7 @@ export default function AdminPeminjaman() {
         book_id: bk.book_id,
         judul: bk.title || "",
         penulis: bk.author || "",
+        blurb: bk.blurb || "",
         genre: bk.genre || "",
         status: bk.status || "Tersedia",
       }));
@@ -174,6 +186,7 @@ export default function AdminPeminjaman() {
       book_id: Date.now(),
       judul: "",
       penulis: "",
+      blurb: "",
       genre: "",
       status: "Tersedia",
     });
@@ -407,13 +420,23 @@ export default function AdminPeminjaman() {
   return (
     <section className="w-full min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200 pt-28 pb-20 px-4 flex justify-center">
       <div className="w-full max-w-7xl bg-white rounded-2xl shadow-xl border border-orange-100 px-6 py-5 md:px-8 md:py-6">
-        <div className="flex flex-col gap-2 mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-            Panel Admin <span className="text-orange-600">Perpustakaan</span>
-          </h1>
-          <p className="text-sm md:text-base text-gray-500">
-            Kelola peminjaman, data buku, dan ringkasan aktivitas perpustakaan.
-          </p>
+        <div className="flex flex-col md:flex-row justify-between md:items-center gap-3 mb-6 md:mb-8">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Panel Admin <span className="text-orange-600">Perpustakaan</span>
+            </h1>
+            <p className="text-sm md:text-base text-gray-500">
+              Kelola peminjaman, data buku, dan ringkasan aktivitas
+              perpustakaan.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="self-start md:self-auto px-4 py-2 rounded-lg bg-red-500 text-white text-sm md:text-base font-medium hover:bg-red-600 transition-colors shadow-sm"
+          >
+            Logout
+          </button>
         </div>
 
         {/* Tab Navigation */}
@@ -569,7 +592,6 @@ export default function AdminPeminjaman() {
                           id: Date.now(),
                           nama: "",
                           judul: "",
-                          genre: "",
                           tanggalPinjam: "",
                           deadline: "",
                           status: "Dipinjam",
@@ -714,6 +736,18 @@ export default function AdminPeminjaman() {
                     onChange={handleBukuChange}
                     className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sinopsis
+                  </label>
+                  <textarea
+                    name="blurb"
+                    value={formBuku.blurb}
+                    onChange={handleBukuChange}
+                    rows={3}
+                    className="w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
                   />
                 </div>
                 <div>
