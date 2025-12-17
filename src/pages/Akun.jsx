@@ -143,7 +143,33 @@ const Akun = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 transition-colors duration-300">
-      <div className="w-full max-w-7xl mx-auto px-4 py-6">
+      
+      {/* CSS KHUSUS UNTUK SCROLLBAR */}
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 10px; /* Tinggi scrollbar horizontal */
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1; 
+          border-radius: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #f97316; /* Warna Oranye-500 */
+          border-radius: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #ea580c; /* Warna lebih gelap saat hover */
+        }
+        /* Dark mode adjustment (optional) */
+        .dark .custom-scrollbar::-webkit-scrollbar-track {
+          background: #374151;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #fb923c;
+        }
+      `}</style>
+
+      <div className="w-full max-w-7xl mx-auto px-4 py-6 pt-24">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
           <div className="space-y-8">
             {/* Profile Section */}
@@ -259,8 +285,9 @@ const Akun = () => {
               {loading ? (
                 <p className="text-gray-500 dark:text-gray-400">Memuat data menunggu persetujuan...</p>
               ) : pendingLoans.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                // UPDATE: Menambahkan class 'custom-scrollbar' dan 'pb-2'
+                <div className="overflow-x-auto custom-scrollbar pb-2">
+                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 whitespace-nowrap">
                     <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -277,13 +304,13 @@ const Akun = () => {
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                       {pendingLoans.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.judul}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.tanggalPinjam}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                               {loan.status}
                             </span>
@@ -308,8 +335,9 @@ const Akun = () => {
               {loading ? (
                 <p className="text-gray-500 dark:text-gray-400">Memuat data peminjaman...</p>
               ) : activeLoans.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                // UPDATE: Menambahkan class 'custom-scrollbar' dan 'pb-2'
+                <div className="overflow-x-auto custom-scrollbar pb-2">
+                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 whitespace-nowrap">
                     <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -329,16 +357,16 @@ const Akun = () => {
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                       {activeLoans.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.judul}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.tanggalPinjam}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.deadline}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                               {loan.status}
                             </span>
@@ -363,8 +391,9 @@ const Akun = () => {
               {loading ? (
                 <p className="text-gray-500 dark:text-gray-400">Memuat riwayat peminjaman...</p>
               ) : loanHistory.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                // UPDATE: Menambahkan class 'custom-scrollbar' dan 'pb-2'
+                <div className="overflow-x-auto custom-scrollbar pb-2">
+                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 whitespace-nowrap">
                     <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -384,16 +413,16 @@ const Akun = () => {
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                       {loanHistory.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.judul}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.tanggalPinjam}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-gray-900 dark:text-white">
                             {loan.tanggalKembali || "-"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4">
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                               {loan.status}
                             </span>

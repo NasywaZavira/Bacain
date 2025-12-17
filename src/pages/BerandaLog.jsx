@@ -18,18 +18,14 @@ const BerandaLog = () => {
     setIsLoggedIn(loggedIn);
 
     if (loggedIn) {
-      // Get user email from localStorage to identify the user
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         try {
           const loggedUser = JSON.parse(storedUser);
           const userEmail = loggedUser.user_email;
-
-          // Fetch fresh user data from database
           fetchUserData(userEmail);
         } catch (error) {
           console.error("Error parsing stored user data:", error);
-          // If localStorage is corrupted, clear it and redirect to login
           localStorage.removeItem("user");
           localStorage.removeItem("isLoggedIn");
           navigate("/login");
@@ -60,11 +56,8 @@ const BerandaLog = () => {
           phone: currentUser.nohp || "",
           role: currentUser.role || "user",
         });
-
-        // Update localStorage with fresh data
         localStorage.setItem("user", JSON.stringify(currentUser));
       } else {
-        console.error("User not found in database");
         localStorage.removeItem("user");
         localStorage.removeItem("isLoggedIn");
         navigate("/login");
@@ -77,22 +70,22 @@ const BerandaLog = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 dark:bg-none dark:bg-gray-900 transition-all duration-300">
       {/* Content */}
-      <section className="flex-1 w-full flex flex-col justify-center items-start">
-        <div className="max-w-xl space-y-4 ml-[10vw]">
-          <h1 className="text-6xl font-medium leading-tight text-gray-900 dark:text-white transition-colors">
+      <section className="flex-1 w-full flex flex-col justify-center items-center md:items-start">
+        <div className="max-w-xl space-y-4 px-6 md:ml-[10vw] md:px-0 text-center md:text-left">
+          <h1 className="text-4xl md:text-6xl font-medium leading-tight text-gray-900 dark:text-white transition-colors">
             Hello,{" "}
             {userData.username ? (
-              <span className="text-orange-500 font-medium">
+              <span className="text-orange-500 font-medium block md:inline">
                 {userData.username}
               </span>
             ) : (
               ""
             )}
-            <br />
+            <br className="hidden md:block"/>
             Selamat Datang
           </h1>
 
-          <p className="text-xl ml-1 text-gray-700 dark:text-gray-300 transition-colors">
+          <p className="text-lg md:text-xl md:ml-1 text-gray-700 dark:text-gray-300 transition-colors">
             di{" "}
             <span className="text-orange-500 font-semibold">
               Perpustakaan Bacain!!
@@ -101,12 +94,14 @@ const BerandaLog = () => {
           </p>
 
           {!isLoggedIn && (
-            <button
-              onClick={() => navigate("/login")}
-              className="px-6 py-3 bg-orange-400 text-white rounded-xl shadow hover:bg-orange-600 transition"
-            >
-              Login Sekarang
-            </button>
+            <div className="pt-4 md:pt-0">
+                <button
+                onClick={() => navigate("/login")}
+                className="px-6 py-3 bg-orange-400 text-white rounded-xl shadow hover:bg-orange-600 transition"
+                >
+                Login Sekarang
+                </button>
+            </div>
           )}
         </div>
       </section>
