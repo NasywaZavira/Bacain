@@ -40,7 +40,8 @@ const Layout = () => {
   const showNavbar = !hideNavbarOn.includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    // PENTING: dark:bg-gray-900 dark:text-gray-100 agar background global berubah
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
       {/* Konfigurasi Toast Notification */}
       <Toaster
         position="top-center"
@@ -84,6 +85,9 @@ const App = () => {
         <Route path="/tentang" element={<Tentang />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
+
+        {/* Test Route (Optional) */}
+        <Route path="/test" element={<TestConnection />} />
 
         {/* Protected Routes */}
         <Route

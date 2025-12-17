@@ -75,11 +75,11 @@ const BerandaLog = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 dark:bg-none dark:bg-gray-900 transition-all duration-300">
       {/* Content */}
       <section className="flex-1 w-full flex flex-col justify-center items-start">
         <div className="max-w-xl space-y-4 ml-[10vw]">
-          <h1 className="text-6xl font-medium leading-tight">
+          <h1 className="text-6xl font-medium leading-tight text-gray-900 dark:text-white transition-colors">
             Hello,{" "}
             {userData.username ? (
               <span className="text-orange-500 font-medium">
@@ -92,7 +92,7 @@ const BerandaLog = () => {
             Selamat Datang
           </h1>
 
-          <p className="text-xl ml-1">
+          <p className="text-xl ml-1 text-gray-700 dark:text-gray-300 transition-colors">
             di{" "}
             <span className="text-orange-500 font-semibold">
               Perpustakaan Bacain!!
@@ -112,8 +112,8 @@ const BerandaLog = () => {
       </section>
 
       {/* Footer Sticky */}
-      <footer className="w-full text-center py-4 text-gray-700 sticky bottom-0">
-        <p className="text-sm text-gray-700">
+      <footer className="w-full text-center py-4 text-gray-700 dark:text-gray-500 sticky bottom-0 transition-colors">
+        <p className="text-sm">
           © {new Date().getFullYear()} Perpustakaan Bacain — All Rights Reserved
         </p>
       </footer>

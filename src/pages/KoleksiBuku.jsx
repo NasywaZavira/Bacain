@@ -135,18 +135,18 @@ const KoleksiBuku = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
+    <div className="min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Loading State dengan animasi Pulse bawaan Tailwind */}
+        {/* Loading State */}
         {loading && (
-          <div className="text-center py-12 bg-white rounded-lg shadow animate-pulse">
-            <p className="text-gray-500 font-medium">Sedang memuat data...</p>
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow animate-pulse">
+            <p className="text-gray-500 dark:text-gray-300 font-medium">Sedang memuat data...</p>
           </div>
         )}
 
         {/* Error State */}
         {error && !loading && (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow">
             <p className="text-red-500 mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
@@ -161,12 +161,12 @@ const KoleksiBuku = () => {
         {!loading && !error && (
           <>
             {/* Search and Filter Section */}
-            <div className="mb-8 bg-white p-6 rounded-lg shadow-md transition-shadow hover:shadow-lg duration-300">
+            <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
               <div className="flex flex-col md:flex-row gap-4 mb-6">
                 <div className="flex-1">
                   <label
                     htmlFor="search"
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >
                     Cari Buku
                   </label>
@@ -174,7 +174,7 @@ const KoleksiBuku = () => {
                     type="text"
                     id="search"
                     placeholder="Cari judul atau penulis..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:text-white transition-colors"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -183,13 +183,13 @@ const KoleksiBuku = () => {
                 <div className="w-full md:w-64">
                   <label
                     htmlFor="genre"
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                   >
                     Filter Genre
                   </label>
                   <select
                     id="genre"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none cursor-pointer"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none cursor-pointer dark:bg-gray-700 dark:text-white transition-colors"
                     value={selectedGenre}
                     onChange={(e) => setSelectedGenre(e.target.value)}
                   >
@@ -202,7 +202,7 @@ const KoleksiBuku = () => {
                 </div>
               </div>
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 Menampilkan {filteredBooks.length} dari {books.length} buku
               </p>
             </div>
@@ -213,48 +213,48 @@ const KoleksiBuku = () => {
                 {filteredBooks.map((book) => (
                   <div
                     key={book.book_id}
-                    // FITUR UPDATE: Hover Effect (Melayang & Bayangan) menggunakan Tailwind
-                    className="bg-white rounded-xl shadow-md overflow-hidden p-6 h-full flex flex-col border border-transparent 
-                               hover:border-orange-200 hover:-translate-y-2 hover:shadow-2xl 
+                    // FITUR UPDATE: Dark Mode + Hover Effect (Melayang & Bayangan)
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-6 h-full flex flex-col border border-transparent 
+                               hover:border-orange-200 dark:hover:border-orange-700 hover:-translate-y-2 hover:shadow-2xl 
                                transition-all duration-300 ease-in-out group"
                   >
                     <div className="grow">
                       <h3
-                        className="font-semibold text-lg mb-2 text-gray-800 group-hover:text-orange-600 transition-colors"
+                        className="font-semibold text-lg mb-2 text-gray-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors"
                         title={book.title}
                       >
                         {book.title}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-3">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
                         Oleh: {book.author}
                       </p>
                       <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
+                        <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-200 text-xs font-medium rounded-full">
                           {book.genre}
                         </span>
                         <span
                           className={`px-3 py-1 text-xs font-medium rounded-full ${
                             book.status === "Tersedia"
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200"
                               : book.status === "Menunggu Persetujuan"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
+                              ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-200"
+                              : "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200"
                           }`}
                         >
                           {book.status}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-3">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
                         {book.blurb}
                       </p>
                     </div>
                     
-                    {/* FITUR UPDATE: Tombol dengan efek tekan (Active Scale) */}
+                    {/* FITUR UPDATE: Tombol dengan efek tekan (Active Scale) & Dark Mode */}
                     <button
                       className={`w-full py-2 rounded-lg transition-all duration-200 mt-4 font-medium active:scale-95 ${
                         book.status === "Tersedia"
                           ? "bg-orange-500 text-white hover:bg-orange-600 shadow-md hover:shadow-lg"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                          : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                       }`}
                       onClick={() => handleBorrow(book.book_id)}
                       disabled={book.status !== "Tersedia"}
@@ -269,14 +269,14 @@ const KoleksiBuku = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 bg-white rounded-lg shadow">
-                <p className="text-gray-500">Tidak ada buku yang ditemukan.</p>
+              <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow transition-colors">
+                <p className="text-gray-500 dark:text-gray-400">Tidak ada buku yang ditemukan.</p>
                 <button
                   onClick={() => {
                     setSearchQuery("");
                     setSelectedGenre("Semua");
                   }}
-                  className="mt-4 text-orange-600 hover:text-orange-800 hover:underline"
+                  className="mt-4 text-orange-600 dark:text-orange-400 hover:text-orange-800 hover:underline"
                 >
                   Reset filter
                 </button>
@@ -286,7 +286,7 @@ const KoleksiBuku = () => {
         )}
       </div>
       {/* Footer */}
-      <footer className="w-full text-center py-4 text-gray-700 mt-6">
+      <footer className="w-full text-center py-4 text-gray-700 dark:text-gray-500 mt-6 transition-colors">
         <p className="text-sm">
           © {new Date().getFullYear()} Perpustakaan Bacain — All Rights
           Reserved

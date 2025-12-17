@@ -142,43 +142,43 @@ const Akun = () => {
   const loanHistory = loans.filter((loan) => loan.status === "Dikembalikan");
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200">
+    <div className="min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 transition-colors duration-300">
       <div className="w-full max-w-7xl mx-auto px-4 py-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
           <div className="space-y-8">
             {/* Profile Section */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
                 Profil Saya
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                     Informasi Akun
                   </h3>
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm text-gray-500">Username</p>
-                      <p className="font-medium">{userData.username || "-"}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Username</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-200">{userData.username || "-"}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Email</p>
-                      <p className="font-medium">{userData.email}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-200">{userData.email}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Nomor Telepon</p>
-                      <p className="font-medium">{userData.phone || "-"}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Nomor Telepon</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-200">{userData.phone || "-"}</p>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                     Ubah Profil
                   </h3>
                   {isEditing ? (
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm text-gray-500 mb-1">
+                        <label className="block text-sm text-gray-500 dark:text-gray-400 mb-1">
                           Username
                         </label>
                         <input
@@ -186,11 +186,11 @@ const Akun = () => {
                           name="username"
                           value={formProfile.username}
                           onChange={handleProfileChange}
-                          className="w-full px-3 py-2 border rounded-md"
+                          className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm text-gray-500 mb-1">
+                        <label className="block text-sm text-gray-500 dark:text-gray-400 mb-1">
                           Email
                         </label>
                         <input
@@ -198,11 +198,11 @@ const Akun = () => {
                           name="email"
                           value={formProfile.email}
                           onChange={handleProfileChange}
-                          className="w-full px-3 py-2 border rounded-md"
+                          className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm text-gray-500 mb-1">
+                        <label className="block text-sm text-gray-500 dark:text-gray-400 mb-1">
                           Nomor Telepon
                         </label>
                         <input
@@ -210,7 +210,7 @@ const Akun = () => {
                           name="phone"
                           value={formProfile.phone}
                           onChange={handleProfileChange}
-                          className="w-full px-3 py-2 border rounded-md"
+                          className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         />
                       </div>
                       <div className="flex gap-3">
@@ -232,7 +232,7 @@ const Akun = () => {
                               phone: userData.phone,
                             });
                           }}
-                          className="px-4 py-2 rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300"
+                          className="px-4 py-2 rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                         >
                           Batal
                         </button>
@@ -242,7 +242,7 @@ const Akun = () => {
                     <button
                       type="button"
                       onClick={() => setIsEditing(true)}
-                      className="text-orange-600 hover:text-orange-700 font-medium"
+                      className="text-orange-600 hover:text-orange-700 dark:text-orange-400 font-medium"
                     >
                       Edit Profil
                     </button>
@@ -253,34 +253,34 @@ const Akun = () => {
 
             {/* Pending Loans Section */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
                 Menunggu Persetujuan
               </h3>
               {loading ? (
-                <p>Memuat data menunggu persetujuan...</p>
+                <p className="text-gray-500 dark:text-gray-400">Memuat data menunggu persetujuan...</p>
               ) : pendingLoans.length > 0 ? (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white border border-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Judul Buku
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Tanggal Pengajuan
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Status
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                       {pendingLoans.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.judul}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.tanggalPinjam}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -294,7 +294,7 @@ const Akun = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500">
+                <p className="text-gray-500 dark:text-gray-400">
                   Tidak ada pengajuan peminjaman yang menunggu persetujuan.
                 </p>
               )}
@@ -302,40 +302,40 @@ const Akun = () => {
 
             {/* Active Loans Section */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
                 Buku yang Dipinjam
               </h3>
               {loading ? (
-                <p>Memuat data peminjaman...</p>
+                <p className="text-gray-500 dark:text-gray-400">Memuat data peminjaman...</p>
               ) : activeLoans.length > 0 ? (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white border border-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Judul Buku
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Tanggal Pinjam
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Tenggat Kembali
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Status
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                       {activeLoans.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.judul}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.tanggalPinjam}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.deadline}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -349,7 +349,7 @@ const Akun = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500">
+                <p className="text-gray-500 dark:text-gray-400">
                   Tidak ada buku yang sedang dipinjam.
                 </p>
               )}
@@ -357,40 +357,40 @@ const Akun = () => {
 
             {/* Loan History Section */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
                 Riwayat Peminjaman
               </h3>
               {loading ? (
-                <p>Memuat riwayat peminjaman...</p>
+                <p className="text-gray-500 dark:text-gray-400">Memuat riwayat peminjaman...</p>
               ) : loanHistory.length > 0 ? (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white border border-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Judul Buku
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Tanggal Pinjam
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Tanggal Kembali
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                           Status
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                       {loanHistory.map((loan, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.judul}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.tanggalPinjam}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white">
                             {loan.tanggalKembali || "-"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -404,12 +404,12 @@ const Akun = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-500">Belum ada riwayat peminjaman.</p>
+                <p className="text-gray-500 dark:text-gray-400">Belum ada riwayat peminjaman.</p>
               )}
             </div>
 
             {/* Logout Button */}
-            <div className="pt-6 border-t border-gray-200">
+            <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleLogout}
                 className="flex items-center justify-center w-full md:w-auto px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
