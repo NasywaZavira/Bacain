@@ -40,7 +40,6 @@ const Layout = () => {
   const showNavbar = !hideNavbarOn.includes(location.pathname);
 
   return (
-    // PENTING: dark:bg-gray-900 dark:text-gray-100 agar background global berubah
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
       {/* Konfigurasi Toast Notification */}
       <Toaster

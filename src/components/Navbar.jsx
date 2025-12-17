@@ -8,7 +8,6 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   
-  // STATE DARK MODE (Cek penyimpanan lokal saat pertama dibuka)
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   // Check login status on component mount and route change
@@ -20,7 +19,7 @@ const Navbar = () => {
     setUserData(user);
   }, [location.pathname]);
 
-  // LOGIKA GANTI TEMA (Jalan setiap kali tombol diklik)
+  // Logika Ganti Tema
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");

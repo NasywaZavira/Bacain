@@ -78,7 +78,6 @@ const LogIn = () => {
   };
 
   return (
-    // FIX: Tambahkan dark:bg-gray-900 dan transition
     <div className="flex justify-center items-center h-screen bg-orange-100 dark:bg-gray-900 transition-colors duration-300">
       
       {/* Kartu Login: Support Dark Mode */}
@@ -94,7 +93,6 @@ const LogIn = () => {
             </label>
             <input
               type="email"
-              // FIX: Input field menyesuaikan dark mode
               className="w-full border border-orange-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
               placeholder="Masukkan email"
               value={email}

@@ -3,15 +3,12 @@
 /* Import Tailwind Utama */
 @import "tailwindcss";
 
-/* --- KODE SAKTI: MAKSA DARK MODE AKTIF --- */
-/* Kode ini bilang: "Kalau ada class .dark di HTML, aktifkan mode gelap!" */
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Poppins", sans-serif;
 }
 
-/* Debugging: Kalau layar jadi hitam pekat, berarti jalan */
 :root.dark body {
   background-color: #111827; 
   color: #ffffff;
