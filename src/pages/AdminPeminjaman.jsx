@@ -419,8 +419,10 @@ export default function AdminPeminjaman() {
 
   // --- BAGIAN TAMPILAN (Responsive Layout) ---
   return (
-    <section className="w-full min-h-screen bg-linear-to-b from-white via-white/80 to-orange-200 pt-24 pb-20 px-4 md:px-6 flex justify-center">
-      <div className="w-full max-w-7xl bg-white rounded-2xl shadow-xl border border-orange-100 px-4 py-5 md:px-8 md:py-6">
+    <section className="w-full min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 pt-24 pb-20 px-4 md:px-6 flex justify-center">
+      
+      {/* UPDATE PENTING: Menambahkan 'text-gray-900' di sini agar teks dipaksa hitam */}
+      <div className="w-full max-w-7xl bg-white text-gray-900 rounded-2xl shadow-xl border border-orange-100 px-4 py-5 md:px-8 md:py-6">
         
         {/* Header Responsive */}
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6 md:mb-8">
@@ -465,7 +467,7 @@ export default function AdminPeminjaman() {
             placeholder="Cari data..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm text-gray-900 bg-white"
           />
         </div>
 
@@ -476,31 +478,31 @@ export default function AdminPeminjaman() {
               Kelola Peminjaman
             </h2>
 
-            {/* Form Peminjaman Responsive (Grid 1 col di HP, 2 di Tablet, 4 di PC) */}
+            {/* Form Peminjaman Responsive */}
             <form onSubmit={handleSubmitPeminjaman} className="mb-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-                  <input type="text" name="nama" value={formPeminjaman.nama} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm" required />
+                  <input type="text" name="nama" value={formPeminjaman.nama} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm bg-white text-gray-900" required />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Buku</label>
-                  <select name="judul" value={formPeminjaman.judul} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm" required>
+                  <select name="judul" value={formPeminjaman.judul} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm bg-white text-gray-900" required>
                     <option value="">Pilih Buku</option>
                     {buku.filter((book) => book.status === "Tersedia").map((book) => (<option key={book.book_id} value={book.judul}>{book.judul}</option>))}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Tgl Pinjam</label>
-                  <input type="date" name="tanggalPinjam" value={formPeminjaman.tanggalPinjam} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm" required />
+                  <input type="date" name="tanggalPinjam" value={formPeminjaman.tanggalPinjam} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm bg-white text-gray-900" required />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Jatuh Tempo</label>
-                  <input type="date" name="deadline" value={formPeminjaman.deadline} onChange={handlePeminjamanChange} min={formPeminjaman.tanggalPinjam} className="w-full p-2.5 border rounded-lg text-sm" required />
+                  <input type="date" name="deadline" value={formPeminjaman.deadline} onChange={handlePeminjamanChange} min={formPeminjaman.tanggalPinjam} className="w-full p-2.5 border rounded-lg text-sm bg-white text-gray-900" required />
                 </div>
                 <div>
                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                   <select name="status" value={formPeminjaman.status} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm">
+                   <select name="status" value={formPeminjaman.status} onChange={handlePeminjamanChange} className="w-full p-2.5 border rounded-lg text-sm bg-white text-gray-900">
                     <option value="Dipinjam">Dipinjam</option>
                     <option value="Dikembalikan">Dikembalikan</option>
                   </select>
@@ -522,7 +524,7 @@ export default function AdminPeminjaman() {
 
             {/* Tabel Peminjaman dengan Scroll Horizontal */}
             <div className="overflow-x-auto rounded-xl border border-gray-100 bg-white">
-              <table className="min-w-full text-sm whitespace-nowrap">
+              <table className="min-w-full text-sm whitespace-nowrap text-gray-900">
                 <thead className="bg-orange-500 text-white">
                   <tr>
                     <th className="px-4 py-3 text-left">Nama</th>
@@ -538,9 +540,9 @@ export default function AdminPeminjaman() {
                   ) : (
                     filteredPeminjaman.map((item, index) => (
                       <tr key={index} className="hover:bg-orange-50/40">
-                        <td className="px-4 py-3">{item.nama}</td>
-                        <td className="px-4 py-3 max-w-[150px] truncate" title={item.judul}>{item.judul}</td>
-                        <td className="px-4 py-3">{item.tanggalPinjam}</td>
+                        <td className="px-4 py-3 text-gray-800">{item.nama}</td>
+                        <td className="px-4 py-3 max-w-[150px] truncate text-gray-800" title={item.judul}>{item.judul}</td>
+                        <td className="px-4 py-3 text-gray-800">{item.tanggalPinjam}</td>
                         <td className="px-4 py-3">
                            <span className={`px-2 py-1 text-xs rounded-full border ${item.status === "Dipinjam" ? "bg-yellow-100 text-yellow-800" : item.status === "Menunggu Persetujuan" ? "bg-orange-100 text-orange-800" : item.status === "Ditolak" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}>
                             {item.status}
@@ -575,15 +577,15 @@ export default function AdminPeminjaman() {
              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6">Daftar Buku</h2>
              <form onSubmit={handleSubmitBuku} className="mb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <input type="text" name="judul" placeholder="Judul" value={formBuku.judul} onChange={handleBukuChange} className="p-2 border rounded-lg" required />
-                    <input type="text" name="penulis" placeholder="Penulis" value={formBuku.penulis} onChange={handleBukuChange} className="p-2 border rounded-lg" required />
-                    <input type="text" name="genre" placeholder="Genre" value={formBuku.genre} onChange={handleBukuChange} className="p-2 border rounded-lg" />
-                    <select name="status" value={formBuku.status} onChange={handleBukuChange} className="p-2 border rounded-lg">
+                    <input type="text" name="judul" placeholder="Judul" value={formBuku.judul} onChange={handleBukuChange} className="p-2 border rounded-lg bg-white text-gray-900" required />
+                    <input type="text" name="penulis" placeholder="Penulis" value={formBuku.penulis} onChange={handleBukuChange} className="p-2 border rounded-lg bg-white text-gray-900" required />
+                    <input type="text" name="genre" placeholder="Genre" value={formBuku.genre} onChange={handleBukuChange} className="p-2 border rounded-lg bg-white text-gray-900" />
+                    <select name="status" value={formBuku.status} onChange={handleBukuChange} className="p-2 border rounded-lg bg-white text-gray-900">
                         <option value="Tersedia">Tersedia</option>
                         <option value="Dipinjam">Dipinjam</option>
                     </select>
                     <div className="col-span-1 md:col-span-2 lg:col-span-4">
-                        <textarea name="blurb" placeholder="Sinopsis" value={formBuku.blurb} onChange={handleBukuChange} rows={2} className="w-full p-2 border rounded-lg resize-none" />
+                        <textarea name="blurb" placeholder="Sinopsis" value={formBuku.blurb} onChange={handleBukuChange} rows={2} className="w-full p-2 border rounded-lg resize-none bg-white text-gray-900" />
                     </div>
                     <div className="col-span-1 lg:col-span-4 flex gap-2">
                          <button type="submit" className="bg-orange-600 text-white py-2 px-6 rounded-lg text-sm font-medium hover:bg-orange-700">{editBukuIndex === null ? "Tambah" : "Simpan"}</button>
@@ -593,7 +595,7 @@ export default function AdminPeminjaman() {
              </form>
 
              <div className="overflow-x-auto rounded-xl border border-gray-100">
-                <table className="min-w-full text-sm whitespace-nowrap">
+                <table className="min-w-full text-sm whitespace-nowrap text-gray-900">
                     <thead className="bg-orange-500 text-white">
                         <tr>
                             <th className="px-4 py-3 text-left">Judul</th>
@@ -627,7 +629,12 @@ export default function AdminPeminjaman() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                      <div className="bg-blue-50 p-6 rounded-lg text-center md:text-left"><h3 className="font-semibold text-blue-800">Total Buku</h3><p className="text-3xl font-bold text-blue-600">{buku.length}</p></div>
                      <div className="bg-yellow-50 p-6 rounded-lg text-center md:text-left"><h3 className="font-semibold text-yellow-800">Sedang Dipinjam</h3><p className="text-3xl font-bold text-yellow-600">{peminjaman.filter(i => i.status === "Dipinjam").length}</p></div>
-                     <div className="bg-green-50 p-6 rounded-lg text-center md:text-left"><h3 className="font-semibold text-green-800">Total Transaksi</h3><p className="text-3xl font-bold text-green-600">{peminjaman.length}</p></div>
+                     
+                     {/* Ganti "Transaksi" jadi "Peminjaman" */}
+                     <div className="bg-green-50 p-6 rounded-lg text-center md:text-left">
+                        <h3 className="font-semibold text-green-800">Total Peminjaman</h3>
+                        <p className="text-3xl font-bold text-green-600">{peminjaman.length}</p>
+                     </div>
                 </div>
            </div>
         )}

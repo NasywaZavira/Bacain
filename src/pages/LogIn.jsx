@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
@@ -17,40 +17,35 @@ const LogIn = () => {
     const loadingToast = toast.loading("Sedang memproses login...");
 
     try {
-      // Cek apakah akun adalah admin
+      // 1. Cek apakah yang login adalah ADMIN
       const adminRes = await fetch(`${BASE}/api/auth/admins`);
       const adminResult = await adminRes.json();
 
-      if (!adminRes.ok) {
-        toast.dismiss(loadingToast);
-        toast.error(adminResult.message || "Gagal mengambil data admin");
-        return;
+      if (adminRes.ok) {
+        const admins = adminResult.data || [];
+        const foundAdmin = admins.find(
+          (a) => a.admin_email === email && a.password === password
+        );
+
+        if (foundAdmin) {
+          localStorage.setItem("admin", JSON.stringify(foundAdmin));
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("role", "admin");
+          localStorage.setItem("isAdminLoggedIn", "true"); // Flag khusus admin
+
+          toast.dismiss(loadingToast);
+          toast.success("Login Berhasil sebagai Admin!");
+          navigate("/admin/peminjaman"); // Arahkan ke dashboard admin
+          return;
+        }
       }
 
-      const admins = adminResult.data || [];
-      const foundAdmin = admins.find(
-        (a) => a.admin_email === email && a.password === password
-      );
-
-      if (foundAdmin) {
-        localStorage.setItem("user", JSON.stringify(foundAdmin));
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("role", "admin");
-
-        toast.dismiss(loadingToast);
-        toast.success("Login Berhasil sebagai Admin!");
-        navigate("/admin/peminjaman"); // Redirect ke dashboard admin
-        return;
-      }
-
-      // Jika bukan admin, cek user biasa
+      // 2. Jika bukan Admin, Cek apakah USER biasa
       const userRes = await fetch(`${BASE}/api/auth/users`);
       const userResult = await userRes.json();
 
       if (!userRes.ok) {
-        toast.dismiss(loadingToast);
-        toast.error(userResult.message || "Gagal mengambil data user");
-        return;
+        throw new Error(userResult.message || "Gagal mengambil data user");
       }
 
       const users = userResult.data || [];
@@ -64,37 +59,46 @@ const LogIn = () => {
         localStorage.setItem("role", "user");
 
         toast.dismiss(loadingToast);
-        toast.success("Login Berhasil!");
-        navigate("/berandalog"); // Redirect ke beranda user
+        toast.success(`Selamat datang, ${foundUser.username}!`);
+        navigate("/berandalog"); // Arahkan ke beranda user
       } else {
         toast.dismiss(loadingToast);
-        toast.error("Email atau password salah!");
+        toast.error("Email atau Password salah!");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Login Error:", error);
       toast.dismiss(loadingToast);
-      toast.error("Terjadi kesalahan koneksi ke server.");
+      toast.error("Terjadi kesalahan saat login.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-orange-100 dark:bg-gray-900 transition-colors duration-300">
+    // CONTAINER UTAMA: Background Gradient Oranye (Sesuai "Awal")
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-white/80 to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300 px-4">
       
-      {/* Kartu Login: Support Dark Mode */}
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-96 transition-colors duration-300">
-        <h2 className="text-3xl font-bold text-center text-orange-600 dark:text-orange-500 mb-6">
-          Login
-        </h2>
+      {/* KARTU FORM: Background Putih bersih */}
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-orange-100 dark:border-gray-700">
+        
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            Login
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Masuk untuk mulai meminjam buku
+          </p>
+        </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        {/* Form */}
+        <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
               Email
             </label>
             <input
               type="email"
-              className="w-full border border-orange-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
-              placeholder="Masukkan email"
+              className="w-full border border-gray-300 dark:border-gray-600 px-4 py-3 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent outline-none dark:bg-gray-700 dark:text-white transition-all"
+              placeholder="nama@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -107,8 +111,8 @@ const LogIn = () => {
             </label>
             <input
               type="password"
-              className="w-full border border-orange-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
-              placeholder="Masukkan password"
+              className="w-full border border-gray-300 dark:border-gray-600 px-4 py-3 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent outline-none dark:bg-gray-700 dark:text-white transition-all"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -117,19 +121,20 @@ const LogIn = () => {
 
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-3 rounded-lg text-lg font-medium shadow hover:bg-orange-600 transition"
+            className="w-full bg-orange-500 text-white py-3 rounded-xl text-lg font-bold shadow-lg hover:bg-orange-600 hover:shadow-orange-500/30 hover:scale-[1.02] active:scale-95 transition-all duration-300"
           >
-            Login
+            Masuk Sekarang
           </button>
         </form>
 
-        <p className="text-center text-sm mt-4 text-gray-700 dark:text-gray-400">
+        {/* Footer Link */}
+        <p className="text-center text-sm mt-6 text-gray-600 dark:text-gray-400">
           Belum punya akun?{" "}
           <span
-            className="text-orange-600 dark:text-orange-400 font-semibold cursor-pointer hover:underline"
             onClick={() => navigate("/signup")}
+            className="text-orange-600 dark:text-orange-400 font-bold cursor-pointer hover:underline"
           >
-            Daftar Sekarang
+            Daftar disini
           </span>
         </p>
       </div>
