@@ -252,8 +252,11 @@ export default function AdminPeminjaman() {
         ...borrowing,
         admin_id: admin.admin_id || 1,
         status: "Dipinjam",
-        borrow_date: borrowing.borrow_date || new Date().toISOString().split("T")[0],
-        return_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+        borrow_date:
+          borrowing.borrow_date || new Date().toISOString().split("T")[0],
+        return_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0],
       };
       await updateBorrowing(borrowing.borrow_id, updatedBorrowing);
       const bookToUpdate = buku.find((book) => book.judul === borrowing.judul);
@@ -273,7 +276,10 @@ export default function AdminPeminjaman() {
     if (!window.confirm("Tolak peminjaman ini?")) return;
     const loadingId = toast.loading("Menolak...");
     try {
-      await updateBorrowing(borrowing.borrow_id, { ...borrowing, status: "Ditolak" });
+      await updateBorrowing(borrowing.borrow_id, {
+        ...borrowing,
+        status: "Ditolak",
+      });
       fetchData();
       toast.dismiss(loadingId);
       toast.success("Ditolak.");
@@ -304,36 +310,43 @@ export default function AdminPeminjaman() {
   const filteredPeminjaman = peminjaman.filter((item) => {
     const nama = (item.nama || "").toLowerCase();
     const judul = (item.judul || "").toLowerCase();
-    return nama.includes(searchTerm.toLowerCase()) || judul.includes(searchTerm.toLowerCase());
+    return (
+      nama.includes(searchTerm.toLowerCase()) ||
+      judul.includes(searchTerm.toLowerCase())
+    );
   });
 
   const filteredBuku = buku.filter((book) => {
     const judul = (book.judul || "").toLowerCase();
     const penulis = (book.penulis || "").toLowerCase();
-    return judul.includes(searchTerm.toLowerCase()) || penulis.includes(searchTerm.toLowerCase());
+    return (
+      judul.includes(searchTerm.toLowerCase()) ||
+      penulis.includes(searchTerm.toLowerCase())
+    );
   });
 
   // --- TAMPILAN (Support Dark Mode) ---
   return (
     <section className="w-full min-h-screen bg-gradient-to-b from-white via-white/80 to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 transition-colors duration-300 pt-24 pb-20 px-4 md:px-6 flex justify-center">
-      
       {/* Kartu Utama: support dark mode bg & text */}
       <div className="w-full max-w-7xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl shadow-xl border border-orange-100 dark:border-gray-700 px-4 py-5 md:px-8 md:py-6 transition-colors duration-300">
-        
         {/* Header Responsive */}
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6 md:mb-8">
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl md:text-3xl font-bold">
-              Panel Admin <span className="text-orange-600 dark:text-orange-400">Perpustakaan</span>
+              Panel Admin{" "}
+              <span className="text-orange-600 dark:text-orange-400">
+                Perpustakaan
+              </span>
             </h1>
             <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
               Kelola data perpustakaan.
             </p>
           </div>
-          
+
           {/* Tombol Tema & Logout */}
           <div className="flex items-center gap-3 self-start md:self-auto">
-             <button
+            <button
               onClick={toggleTheme}
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               title="Ganti Tema"
@@ -389,38 +402,104 @@ export default function AdminPeminjaman() {
             <form onSubmit={handleSubmitPeminjaman} className="mb-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama</label>
-                  <input type="text" name="nama" value={formPeminjaman.nama} onChange={handlePeminjamanChange} className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" required />
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Nama
+                  </label>
+                  <input
+                    type="text"
+                    name="nama"
+                    value={formPeminjaman.nama}
+                    onChange={handlePeminjamanChange}
+                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                    required
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Buku</label>
-                  <select name="judul" value={formPeminjaman.judul} onChange={handlePeminjamanChange} className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" required>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Buku
+                  </label>
+                  <select
+                    name="judul"
+                    value={formPeminjaman.judul}
+                    onChange={handlePeminjamanChange}
+                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                    required
+                  >
                     <option value="">Pilih Buku</option>
-                    {buku.filter((book) => book.status === "Tersedia").map((book) => (<option key={book.book_id} value={book.judul}>{book.judul}</option>))}
+                    {buku
+                      .filter((book) => book.status === "Tersedia")
+                      .map((book) => (
+                        <option key={book.book_id} value={book.judul}>
+                          {book.judul}
+                        </option>
+                      ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tgl Pinjam</label>
-                  <input type="date" name="tanggalPinjam" value={formPeminjaman.tanggalPinjam} onChange={handlePeminjamanChange} className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" required />
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Tanggal Pinjam
+                  </label>
+                  <input
+                    type="date"
+                    name="tanggalPinjam"
+                    value={formPeminjaman.tanggalPinjam}
+                    onChange={handlePeminjamanChange}
+                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                    required
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jatuh Tempo</label>
-                  <input type="date" name="deadline" value={formPeminjaman.deadline} onChange={handlePeminjamanChange} min={formPeminjaman.tanggalPinjam} className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" required />
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Tanggal Pengembalian
+                  </label>
+                  <input
+                    type="date"
+                    name="deadline"
+                    value={formPeminjaman.deadline}
+                    min={formPeminjaman.tanggalPinjam}
+                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                    required
+                  />
                 </div>
                 <div>
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
-                   <select name="status" value={formPeminjaman.status} onChange={handlePeminjamanChange} className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    value={formPeminjaman.status}
+                    onChange={handlePeminjamanChange}
+                    className="w-full p-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                  >
                     <option value="Dipinjam">Dipinjam</option>
                     <option value="Dikembalikan">Dikembalikan</option>
                   </select>
                 </div>
-                
+
                 <div className="flex items-end gap-2 lg:col-span-3">
-                  <button type="submit" className="flex-1 md:flex-none bg-orange-600 text-white py-2.5 px-6 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors">
+                  <button
+                    type="submit"
+                    className="flex-1 md:flex-none bg-orange-600 text-white py-2.5 px-6 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors"
+                  >
                     {editIndex === null ? "Tambah" : "Simpan"}
                   </button>
                   {editIndex !== null && (
-                    <button type="button" onClick={() => { setFormPeminjaman({ id: Date.now(), nama: "", judul: "", tanggalPinjam: "", deadline: "", status: "Dipinjam" }); setEditIndex(null); toast("Batal", { icon: "❌" }); }} className="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-white py-2.5 px-4 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-500">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormPeminjaman({
+                          id: Date.now(),
+                          nama: "",
+                          judul: "",
+                          tanggalPinjam: "",
+                          deadline: "",
+                          status: "Dipinjam",
+                        });
+                        setEditIndex(null);
+                        toast("Batal", { icon: "❌" });
+                      }}
+                      className="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-white py-2.5 px-4 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-500"
+                    >
                       Batal
                     </button>
                   )}
@@ -435,37 +514,96 @@ export default function AdminPeminjaman() {
                   <tr>
                     <th className="px-4 py-3 text-left">Nama</th>
                     <th className="px-4 py-3 text-left">Buku</th>
-                    <th className="px-4 py-3 text-left">Tgl Pinjam</th>
+                    <th className="px-4 py-3 text-left">Tanggal Pinjam</th>
+                    <th className="px-4 py-3 text-left">
+                      Tanggal Pengembalian
+                    </th>
                     <th className="px-4 py-3 text-left">Status</th>
                     <th className="px-4 py-3 text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                   {filteredPeminjaman.length === 0 ? (
-                    <tr><td colSpan="5" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Data kosong</td></tr>
+                  {filteredPeminjaman.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan="6"
+                        className="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
+                      >
+                        Data kosong
+                      </td>
+                    </tr>
                   ) : (
                     filteredPeminjaman.map((item, index) => (
-                      <tr key={index} className="hover:bg-orange-50/40 dark:hover:bg-gray-700/50 transition-colors">
+                      <tr
+                        key={index}
+                        className="hover:bg-orange-50/40 dark:hover:bg-gray-700/50 transition-colors"
+                      >
                         <td className="px-4 py-3">{item.nama}</td>
-                        <td className="px-4 py-3 max-w-[150px] truncate" title={item.judul}>{item.judul}</td>
+                        <td
+                          className="px-4 py-3 max-w-[150px] truncate"
+                          title={item.judul}
+                        >
+                          {item.judul}
+                        </td>
                         <td className="px-4 py-3">{item.tanggalPinjam}</td>
+                        <td className="px-4 py-3">{item.deadline}</td>
                         <td className="px-4 py-3">
-                           <span className={`px-2 py-1 text-xs rounded-full border ${item.status === "Dipinjam" ? "bg-yellow-100 text-yellow-800" : item.status === "Menunggu Persetujuan" ? "bg-orange-100 text-orange-800" : item.status === "Ditolak" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}>
+                          <span
+                            className={`px-2 py-1 text-xs rounded-full border ${
+                              item.status === "Dipinjam"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : item.status === "Menunggu Persetujuan"
+                                ? "bg-orange-100 text-orange-800"
+                                : item.status === "Ditolak"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-green-100 text-green-800"
+                            }`}
+                          >
                             {item.status}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-center flex justify-center gap-2">
-                            {item.status === "Menunggu Persetujuan" && (
-                              <>
-                                <button onClick={() => handleApproveBorrowing(item)} title="Setujui" className="text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 p-1 rounded">✅</button>
-                                <button onClick={() => handleRejectBorrowing(item)} title="Tolak" className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 p-1 rounded">❌</button>
-                              </>
-                            )}
-                            <button onClick={() => handleEditPeminjaman(index)} title="Edit" className="text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-1 rounded">✏️</button>
-                            <button onClick={() => handleDeletePeminjaman(index)} title="Hapus" className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 p-1 rounded">🗑️</button>
-                            {item.status === "Dipinjam" && (
-                               <button onClick={() => handleKembalikanBuku(index)} title="Kembalikan" className="text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 p-1 rounded">↩️</button>
-                            )}
+                          {item.status === "Menunggu Persetujuan" && (
+                            <>
+                              <button
+                                onClick={() => handleApproveBorrowing(item)}
+                                title="Setujui"
+                                className="text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 p-1 rounded"
+                              >
+                                ✅
+                              </button>
+                              <button
+                                onClick={() => handleRejectBorrowing(item)}
+                                title="Tolak"
+                                className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 p-1 rounded"
+                              >
+                                ❌
+                              </button>
+                            </>
+                          )}
+                          <button
+                            onClick={() => handleEditPeminjaman(index)}
+                            title="Edit"
+                            className="text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-1 rounded"
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            onClick={() => handleDeletePeminjaman(index)}
+                            title="Hapus"
+                            className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 p-1 rounded"
+                          >
+                            🗑️
+                          </button>
+                          {item.status === "Dipinjam" && (
+                            <button
+                              onClick={() => handleKembalikanBuku(index)}
+                              title="Kembalikan"
+                              className="text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 p-1 rounded"
+                            >
+                              ↩️
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))
@@ -479,70 +617,333 @@ export default function AdminPeminjaman() {
         {/* Buku Tab */}
         {activeTab === "buku" && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6">
-             <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-6">Daftar Buku</h2>
-             <form onSubmit={handleSubmitBuku} className="mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <input type="text" name="judul" placeholder="Judul" value={formBuku.judul} onChange={handleBukuChange} className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" required />
-                    <input type="text" name="penulis" placeholder="Penulis" value={formBuku.penulis} onChange={handleBukuChange} className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" required />
-                    <input type="text" name="genre" placeholder="Genre" value={formBuku.genre} onChange={handleBukuChange} className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" />
-                    <select name="status" value={formBuku.status} onChange={handleBukuChange} className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none">
-                        <option value="Tersedia">Tersedia</option>
-                        <option value="Dipinjam">Dipinjam</option>
-                    </select>
-                    <div className="col-span-1 md:col-span-2 lg:col-span-4">
-                        <textarea name="blurb" placeholder="Sinopsis" value={formBuku.blurb} onChange={handleBukuChange} rows={2} className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none" />
-                    </div>
-                    <div className="col-span-1 lg:col-span-4 flex gap-2">
-                         <button type="submit" className="bg-orange-600 text-white py-2 px-6 rounded-lg text-sm font-medium hover:bg-orange-700">{editBukuIndex === null ? "Tambah" : "Simpan"}</button>
-                         {editBukuIndex !== null && <button type="button" onClick={() => { setFormBuku({ book_id: Date.now(), judul: "", penulis: "", genre: "", status: "Tersedia" }); setEditBukuIndex(null); }} className="bg-gray-200 dark:bg-gray-600 dark:text-white px-4 rounded-lg">Batal</button>}
-                    </div>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-6">
+              Daftar Buku
+            </h2>
+            <form onSubmit={handleSubmitBuku} className="mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <input
+                  type="text"
+                  name="judul"
+                  placeholder="Judul"
+                  value={formBuku.judul}
+                  onChange={handleBukuChange}
+                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                  required
+                />
+                <input
+                  type="text"
+                  name="penulis"
+                  placeholder="Penulis"
+                  value={formBuku.penulis}
+                  onChange={handleBukuChange}
+                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                  required
+                />
+                <input
+                  type="text"
+                  name="genre"
+                  placeholder="Genre"
+                  value={formBuku.genre}
+                  onChange={handleBukuChange}
+                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                />
+                <select
+                  name="status"
+                  value={formBuku.status}
+                  onChange={handleBukuChange}
+                  className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                >
+                  <option value="Tersedia">Tersedia</option>
+                  <option value="Dipinjam">Dipinjam</option>
+                </select>
+                <div className="col-span-1 md:col-span-2 lg:col-span-4">
+                  <textarea
+                    name="blurb"
+                    placeholder="Sinopsis"
+                    value={formBuku.blurb}
+                    onChange={handleBukuChange}
+                    rows={2}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                  />
                 </div>
-             </form>
+                <div className="col-span-1 lg:col-span-4 flex gap-2">
+                  <button
+                    type="submit"
+                    className="bg-orange-600 text-white py-2 px-6 rounded-lg text-sm font-medium hover:bg-orange-700"
+                  >
+                    {editBukuIndex === null ? "Tambah" : "Simpan"}
+                  </button>
+                  {editBukuIndex !== null && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormBuku({
+                          book_id: Date.now(),
+                          judul: "",
+                          penulis: "",
+                          genre: "",
+                          status: "Tersedia",
+                        });
+                        setEditBukuIndex(null);
+                      }}
+                      className="bg-gray-200 dark:bg-gray-600 dark:text-white px-4 rounded-lg"
+                    >
+                      Batal
+                    </button>
+                  )}
+                </div>
+              </div>
+            </form>
 
-             <div className="overflow-x-auto rounded-xl border border-gray-100 dark:border-gray-700">
-                <table className="min-w-full text-sm whitespace-nowrap text-gray-900 dark:text-white">
-                    <thead className="bg-orange-500 text-white">
-                        <tr>
-                            <th className="px-4 py-3 text-left">Judul</th>
-                            <th className="px-4 py-3 text-left">Penulis</th>
-                            <th className="px-4 py-3 text-left">Status</th>
-                            <th className="px-4 py-3 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                         {filteredBuku.map((book, index) => (
-                             <tr key={book.book_id} className="hover:bg-orange-50/40 dark:hover:bg-gray-700/50">
-                                 <td className="px-4 py-3 max-w-[200px] truncate">{book.judul}</td>
-                                 <td className="px-4 py-3">{book.penulis}</td>
-                                 <td className="px-4 py-3"><span className={`px-2 py-1 text-xs rounded-full border ${book.status === "Tersedia" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>{book.status}</span></td>
-                                 <td className="px-4 py-3 text-center gap-2 flex justify-center">
-                                     <button onClick={() => handleEditBuku(index)} className="text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-1 rounded">✏️</button>
-                                     <button onClick={() => handleDeleteBuku(index)} className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 p-1 rounded">🗑️</button>
-                                 </td>
-                             </tr>
-                         ))}
-                    </tbody>
-                </table>
-             </div>
+            <div className="overflow-x-auto rounded-xl border border-gray-100 dark:border-gray-700">
+              <table className="min-w-full text-sm whitespace-nowrap text-gray-900 dark:text-white">
+                <thead className="bg-orange-500 text-white">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Judul</th>
+                    <th className="px-4 py-3 text-left">Penulis</th>
+                    <th className="px-4 py-3 text-left">Status</th>
+                    <th className="px-4 py-3 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                  {filteredBuku.map((book, index) => (
+                    <tr
+                      key={book.book_id}
+                      className="hover:bg-orange-50/40 dark:hover:bg-gray-700/50"
+                    >
+                      <td className="px-4 py-3 max-w-[200px] truncate">
+                        {book.judul}
+                      </td>
+                      <td className="px-4 py-3">{book.penulis}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full border ${
+                            book.status === "Tersedia"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {book.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-center gap-2 flex justify-center">
+                        <button
+                          onClick={() => handleEditBuku(index)}
+                          className="text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-1 rounded"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBuku(index)}
+                          className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 p-1 rounded"
+                        >
+                          🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
         {/* Dashboard Tab */}
         {activeTab === "dashboard" && (
-           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Dashboard</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                     <div className="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg text-center md:text-left"><h3 className="font-semibold text-blue-800 dark:text-blue-200">Total Buku</h3><p className="text-3xl font-bold text-blue-600 dark:text-blue-300">{buku.length}</p></div>
-                     <div className="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-lg text-center md:text-left"><h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Sedang Dipinjam</h3><p className="text-3xl font-bold text-yellow-600 dark:text-yellow-300">{peminjaman.filter(i => i.status === "Dipinjam").length}</p></div>
-                     
-                     <div className="bg-green-50 dark:bg-green-900/30 p-6 rounded-lg text-center md:text-left">
-                        <h3 className="font-semibold text-green-800 dark:text-green-200">Total Peminjaman</h3>
-                        <p className="text-3xl font-bold text-green-600 dark:text-green-300">{peminjaman.length}</p>
-                     </div>
-                </div>
-           </div>
-        )}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+              Dashboard
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div className="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg text-center md:text-left">
+                <h3 className="font-semibold text-blue-800 dark:text-blue-200">
+                  Total Buku
+                </h3>
+                <p className="text-3xl font-bold text-blue-600 dark:text-blue-300">
+                  {buku.length}
+                </p>
+              </div>
+              <div className="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-lg text-center md:text-left">
+                <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">
+                  Sedang Dipinjam
+                </h3>
+                <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-300">
+                  {peminjaman.filter((i) => i.status === "Dipinjam").length}
+                </p>
+              </div>
 
+              <div className="bg-green-50 dark:bg-green-900/30 p-6 rounded-lg text-center md:text-left">
+                <h3 className="font-semibold text-green-800 dark:text-green-200">
+                  Total Peminjaman
+                </h3>
+                <p className="text-3xl font-bold text-green-600 dark:text-green-300">
+                  {peminjaman.length}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800">
+                <div className="bg-yellow-500/10 dark:bg-yellow-900/40 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                  <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 text-sm md:text-base">
+                    Sedang Dipinjam
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-xs md:text-sm whitespace-nowrap text-gray-900 dark:text-white">
+                    <thead className="bg-yellow-500 text-white">
+                      <tr>
+                        <th className="px-3 py-2 text-left">Nama</th>
+                        <th className="px-3 py-2 text-left">Buku</th>
+                        <th className="px-3 py-2 text-left">Tgl Pinjam</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                      {filteredPeminjaman.filter((i) => i.status === "Dipinjam")
+                        .length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan="3"
+                            className="px-4 py-3 text-center text-gray-500 dark:text-gray-400"
+                          >
+                            Tidak ada data
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredPeminjaman
+                          .filter((i) => i.status === "Dipinjam")
+                          .map((item, idx) => (
+                            <tr
+                              key={idx}
+                              className="hover:bg-yellow-50/40 dark:hover:bg-gray-700/50 transition-colors"
+                            >
+                              <td className="px-3 py-2">{item.nama}</td>
+                              <td
+                                className="px-3 py-2 max-w-[140px] truncate"
+                                title={item.judul}
+                              >
+                                {item.judul}
+                              </td>
+                              <td className="px-3 py-2">
+                                {item.tanggalPinjam}
+                              </td>
+                            </tr>
+                          ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800">
+                <div className="bg-orange-500/10 dark:bg-orange-900/40 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                  <h3 className="font-semibold text-orange-800 dark:text-orange-200 text-sm md:text-base">
+                    Menunggu Persetujuan
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-xs md:text-sm whitespace-nowrap text-gray-900 dark:text-white">
+                    <thead className="bg-orange-500 text-white">
+                      <tr>
+                        <th className="px-3 py-2 text-left">Nama</th>
+                        <th className="px-3 py-2 text-left">Buku</th>
+                        <th className="px-3 py-2 text-left">Tgl Ajukan</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                      {filteredPeminjaman.filter(
+                        (i) => i.status === "Menunggu Persetujuan"
+                      ).length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan="3"
+                            className="px-4 py-3 text-center text-gray-500 dark:text-gray-400"
+                          >
+                            Tidak ada data
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredPeminjaman
+                          .filter((i) => i.status === "Menunggu Persetujuan")
+                          .map((item, idx) => (
+                            <tr
+                              key={idx}
+                              className="hover:bg-orange-50/40 dark:hover:bg-gray-700/50 transition-colors"
+                            >
+                              <td className="px-3 py-2">{item.nama}</td>
+                              <td
+                                className="px-3 py-2 max-w-[140px] truncate"
+                                title={item.judul}
+                              >
+                                {item.judul}
+                              </td>
+                              <td className="px-3 py-2">
+                                {item.tanggalPinjam}
+                              </td>
+                            </tr>
+                          ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden bg-white dark:bg-gray-800">
+                <div className="bg-green-500/10 dark:bg-green-900/40 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                  <h3 className="font-semibold text-green-800 dark:text-green-200 text-sm md:text-base">
+                    Sudah Dikembalikan
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-xs md:text-sm whitespace-nowrap text-gray-900 dark:text-white">
+                    <thead className="bg-green-500 text-white">
+                      <tr>
+                        <th className="px-3 py-2 text-left">Nama</th>
+                        <th className="px-3 py-2 text-left">Buku</th>
+                        <th className="px-3 py-2 text-left">Tgl Pinjam</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                      {filteredPeminjaman.filter(
+                        (i) => i.status === "Dikembalikan"
+                      ).length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan="3"
+                            className="px-4 py-3 text-center text-gray-500 dark:text-gray-400"
+                          >
+                            Tidak ada data
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredPeminjaman
+                          .filter((i) => i.status === "Dikembalikan")
+                          .map((item, idx) => (
+                            <tr
+                              key={idx}
+                              className="hover:bg-green-50/40 dark:hover:bg-gray-700/50 transition-colors"
+                            >
+                              <td className="px-3 py-2">{item.nama}</td>
+                              <td
+                                className="px-3 py-2 max-w-[140px] truncate"
+                                title={item.judul}
+                              >
+                                {item.judul}
+                              </td>
+                              <td className="px-3 py-2">
+                                {item.tanggalPinjam}
+                              </td>
+                            </tr>
+                          ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
