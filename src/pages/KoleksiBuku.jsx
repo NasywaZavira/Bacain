@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getBooks, createBorrowing } from "../api/apiClient";
+import { getBooks, createBorrowing, getBorrowings } from "../api/apiClient";
 import toast from "react-hot-toast";
 
 const KoleksiBuku = () => {
@@ -18,13 +18,43 @@ const KoleksiBuku = () => {
       try {
         setLoading(true);
         const booksData = await getBooks();
-        setBooks(booksData.data || []);
-        setFilteredBooks(booksData.data || []);
+
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        let processedBooks = booksData.data || [];
+
+        if (user && localStorage.getItem("isLoggedIn")) {
+          try {
+            const borrowingsData = await getBorrowings();
+            const userPendingBorrowings =
+              borrowingsData.data?.filter(
+                (borrowing) =>
+                  borrowing.user_id === user.user_id &&
+                  borrowing.status === "Menunggu Persetujuan"
+              ) || [];
+
+            if (userPendingBorrowings.length > 0) {
+              const pendingBookIds = new Set(
+                userPendingBorrowings.map((b) => b.book_id)
+              );
+
+              processedBooks = processedBooks.map((book) =>
+                pendingBookIds.has(book.book_id)
+                  ? { ...book, status: "Menunggu Persetujuan" }
+                  : book
+              );
+            }
+          } catch (borrowingErr) {
+            console.error("Error syncing borrowings:", borrowingErr);
+          }
+        }
+
+        setBooks(processedBooks);
+        setFilteredBooks(processedBooks);
 
         // Extract unique genres from database
         const uniqueGenres = ["Semua"];
         const allGenres =
-          booksData.data?.map((book) => book.genre).filter(Boolean) || [];
+          processedBooks?.map((book) => book.genre).filter(Boolean) || [];
         const distinctGenres = [...new Set(allGenres)];
         setGenres([...uniqueGenres, ...distinctGenres]);
       } catch (err) {
@@ -83,6 +113,28 @@ const KoleksiBuku = () => {
     const loadingId = toast.loading("Memproses peminjaman...");
 
     try {
+      const existingBorrowings = await getBorrowings();
+      const hasPendingBorrowing = existingBorrowings.data?.some(
+        (borrowing) =>
+          borrowing.book_id === bookId &&
+          borrowing.user_id === user.user_id &&
+          borrowing.status === "Menunggu Persetujuan"
+      );
+
+      if (hasPendingBorrowing) {
+        // Sinkronkan tampilan status buku menjadi "Menunggu Persetujuan"
+        const updatedBooks = books.map((book) =>
+          book.book_id === bookId
+            ? { ...book, status: "Menunggu Persetujuan" }
+            : book
+        );
+        setBooks(updatedBooks);
+        setFilteredBooks(updatedBooks);
+
+        toast.dismiss(loadingId);
+        return;
+      }
+
       const borrowingData = {
         book_id: bookId,
         user_id: user.user_id,

@@ -9,6 +9,7 @@ import {
   updateBooks,
   deleteBook,
   deleteBorrowing,
+  createBook,
 } from "../api/apiClient";
 
 const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030";
@@ -172,17 +173,35 @@ export default function AdminPeminjaman() {
     setEditIndex(null);
   };
 
-  const handleSubmitBuku = (e) => {
+  const handleSubmitBuku = async (e) => {
     e.preventDefault();
-    if (editBukuIndex === null) {
-      setBuku([...buku, { ...formBuku, book_id: Date.now() }]);
-      toast.success("Buku berhasil ditambahkan ke koleksi");
-    } else {
-      const updatedBuku = [...buku];
-      updatedBuku[editBukuIndex] = formBuku;
-      setBuku(updatedBuku);
-      toast.success("Data buku berhasil diperbarui");
+
+    try {
+      if (editBukuIndex === null) {
+        const loadingId = toast.loading("Menambahkan buku...");
+        const payload = {
+          title: formBuku.judul,
+          author: formBuku.penulis,
+          blurb: formBuku.blurb,
+          genre: formBuku.genre,
+          status: formBuku.status,
+        };
+
+        await createBook(payload);
+        await fetchData();
+        toast.dismiss(loadingId);
+        toast.success("Buku berhasil ditambahkan ke koleksi");
+      } else {
+        const updatedBuku = [...buku];
+        updatedBuku[editBukuIndex] = formBuku;
+        setBuku(updatedBuku);
+        toast.success("Data buku berhasil diperbarui");
+      }
+    } catch (error) {
+      console.error("Gagal menyimpan buku:", error);
+      toast.error("Gagal menyimpan buku.");
     }
+
     setFormBuku({
       book_id: Date.now(),
       judul: "",
@@ -640,22 +659,30 @@ export default function AdminPeminjaman() {
                   className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
                   required
                 />
-                <input
-                  type="text"
+                <select
                   name="genre"
-                  placeholder="Genre"
                   value={formBuku.genre}
                   onChange={handleBukuChange}
                   className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
-                />
+                  required
+                >
+                  <option value="">Pilih Genre</option>
+                  <option value="Administrasi">Administrasi</option>
+                  <option value="Agama">Agama</option>
+                  <option value="Ekonomi">Ekonomi</option>
+                  <option value="Ensiklopedia">Ensiklopedia</option>
+                  <option value="Fiksi">Fiksi</option>
+                  <option value="Humor">Humor</option>
+                </select>
                 <select
                   name="status"
                   value={formBuku.status}
                   onChange={handleBukuChange}
                   className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 outline-none"
+                  required
                 >
                   <option value="Tersedia">Tersedia</option>
-                  <option value="Dipinjam">Dipinjam</option>
+                  <option value="Tidak Tersedia">Tidak Tersedia</option>
                 </select>
                 <div className="col-span-1 md:col-span-2 lg:col-span-4">
                   <textarea

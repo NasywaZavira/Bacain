@@ -30,6 +30,13 @@ export async function getBookById(id) {
   return fetchAPI(`/api/auth/books/${id}`);
 }
 
+export async function createBook(bookData) {
+  return fetchAPI("/api/auth/books", {
+    method: "POST",
+    body: JSON.stringify(bookData),
+  });
+}
+
 export async function updateBooks(id, bookData) {
   return fetchAPI(`/api/auth/books/${id}`, {
     method: "PUT",
@@ -94,6 +101,7 @@ export default {
   // Books
   getBooks,
   getBookById,
+  createBook,
   updateBooks,
   deleteBook,
 
