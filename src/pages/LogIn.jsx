@@ -35,7 +35,7 @@ const LogIn = () => {
 
           toast.dismiss(loadingToast);
           toast.success("Login Berhasil sebagai Admin!");
-          navigate("/admin/peminjaman"); // Arahkan ke dashboard admin
+          navigate("/admin/peminjaman"); 
           return;
         }
       }
@@ -60,7 +60,7 @@ const LogIn = () => {
 
         toast.dismiss(loadingToast);
         toast.success(`Selamat datang, ${foundUser.username}!`);
-        navigate("/berandalog"); // Arahkan ke beranda user
+        navigate("/berandalog"); 
       } else {
         toast.dismiss(loadingToast);
         toast.error("Email atau Password salah!");
@@ -73,15 +73,13 @@ const LogIn = () => {
   };
 
   return (
-    // CONTAINER UTAMA: Background Gradient Oranye (Sesuai "Awal")
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-white/80 to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300 px-4">
       
-      {/* KARTU FORM: Background Putih bersih */}
       <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-orange-100 dark:border-gray-700">
         
-        {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+          {/* PERUBAHAN DISINI: text-gray-900 menjadi text-orange-600 */}
+          <h1 className="text-3xl font-bold text-orange-600 dark:text-orange-500 mb-2">
             Login
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
@@ -89,7 +87,6 @@ const LogIn = () => {
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
@@ -132,7 +129,7 @@ const LogIn = () => {
           Belum punya akun?{" "}
           <span
             onClick={() => navigate("/signup")}
-            className="text-orange-600 dark:text-orange-400 font-bold cursor-pointer hover:underline"
+            className="text-orange-600 dark:text-orange-400 font-semibold cursor-pointer hover:underline"
           >
             Daftar disini
           </span>

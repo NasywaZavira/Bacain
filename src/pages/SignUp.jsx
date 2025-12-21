@@ -61,9 +61,9 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-orange-100 dark:bg-gray-900 transition-colors duration-300 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-white/80 to-orange-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300 px-4 py-10">
       
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-96 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-orange-100 dark:border-gray-700 transition-colors duration-300">
         <h2 className="text-3xl font-bold text-center text-orange-600 dark:text-orange-500 mb-6">
           Daftar Akun
         </h2>
@@ -75,7 +75,7 @@ const SignUp = () => {
             </label>
             <input
               type="text"
-              className="w-full border border-orange-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
+              className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
               placeholder="Masukkan username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -89,7 +89,7 @@ const SignUp = () => {
             </label>
             <input
               type="text"
-              className="w-full border border-orange-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
+              className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
               placeholder="Masukkan nomor HP"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -103,7 +103,7 @@ const SignUp = () => {
             </label>
             <input
               type="email"
-              className="w-full border border-orange-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
+              className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
               placeholder="Masukkan email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -117,7 +117,7 @@ const SignUp = () => {
             </label>
             <input
               type="password"
-              className="w-full border border-orange-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
+              className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
               placeholder="Masukkan password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -127,7 +127,7 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-3 rounded-lg text-lg font-medium shadow hover:bg-orange-600 transition"
+            className="w-full bg-orange-500 text-white py-3 rounded-lg text-lg font-bold shadow-lg hover:bg-orange-600 hover:shadow-orange-500/30 hover:scale-[1.02] active:scale-95 transition-all duration-300"
           >
             Daftar
           </button>
@@ -136,7 +136,7 @@ const SignUp = () => {
         <p className="text-center text-sm mt-4 text-gray-700 dark:text-gray-400">
           Sudah punya akun?{" "}
           <span
-            className="text-orange-600 dark:text-orange-400 font-semibold cursor-pointer hover:underline"
+            className="text-orange-600 dark:text-orange-400 font-bold cursor-pointer hover:underline"
             onClick={() => navigate("/login")}
           >
             Login disini
